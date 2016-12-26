@@ -1,0 +1,14 @@
+language: cpp
+os:
+    - linux
+    - osx
+
+compiler:
+    - clang
+    - gcc
+
+before_script:
+    - mkdir -p build && cd build && cmake ..
+    
+script:
+    - make -j8

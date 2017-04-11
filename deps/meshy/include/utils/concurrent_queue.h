@@ -1,4 +1,6 @@
-﻿#include <queue>
+﻿#pragma once
+
+#include <queue>
 #include <mutex>
 
 namespace meshy {
@@ -31,7 +33,7 @@ namespace meshy {
 			}
 			else {
 				std::lock_guard<std::mutex> lock(m_mutex);
-				if (m_queue.empty)return false;
+				if (m_queue.empty())return false;
 			}
 			record = std::move(m_queue.front());
 			m_queue.pop();

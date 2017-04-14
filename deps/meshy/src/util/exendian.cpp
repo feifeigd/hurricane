@@ -33,7 +33,7 @@ namespace meshy {
 #endif // (defined(WIN32) || defined(_WIN32) || defined(__WIN32__)) && !defined(__MINGW32__)
 	}
 
-	inline uint64_t ConvertNetworkToHostLongLong(uint64_t networkll)
+	uint64_t ConvertNetworkToHostLongLong(uint64_t networkll)
 	{
 #if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__)) && !defined(__MINGW32__)
 		return ntohll(networkll);
@@ -42,7 +42,7 @@ namespace meshy {
 #endif
 	}
 
-	inline uint32_t ConvertNetworkToHostLong(uint32_t networkl)
+	uint32_t ConvertNetworkToHostLong(uint32_t networkl)
 	{
 #if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__)) && !defined(__MINGW32__)
 		return ntohl(networkl);

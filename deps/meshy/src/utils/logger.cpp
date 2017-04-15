@@ -1,4 +1,5 @@
 #include <utils/logger.h>
+#include <utils/time.h>
 #include <iostream>
 #include <sstream>
 
@@ -54,7 +55,7 @@ void Logger::InitializeFileStream() {
 void Logger::WriteLog(Priority priority, std::string const& log) {
 	if (priority < m_priority)return;
 	std::stringstream ss;
-	//ss << HurricaneUtils::GetCurrentTimeStamp();
+	ss << HurricaneUtils::GetCurrentTimeStamp();
 	ss << " [" << PRIORITY_STRING[size_t(priority)] << "]" << log;
 	m_queue.push(ss.str());
 }

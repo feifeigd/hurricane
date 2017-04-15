@@ -5,7 +5,6 @@ project(hurricane)
 
 include_directories(
 	${PROJECT_SOURCE_DIR}/deps/meshy/include
-	${PROJECT_SOURCE_DIR}/deps/meshy/include/utils
 )
 
 add_subdirectory(

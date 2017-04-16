@@ -16,7 +16,7 @@
 namespace meshy {
 	class Socket {
 	public:
-		Socket(NativeSocket nativeSocket);
+		Socket(NativeSocket nativeSocket = 0);
 		virtual ~Socket();
 
 		NativeSocket GetNativeSocket()const;

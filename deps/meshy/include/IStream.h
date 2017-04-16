@@ -3,6 +3,9 @@
 #include <functional>
 
 namespace meshy {
+
+	class ByteArray;
+
 	class IStream
 	{
 	public:

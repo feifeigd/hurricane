@@ -1,0 +1,25 @@
+
+#ifdef OS_WIN32
+
+#include <win32/net_win32.h>
+#pragma comment(lib, "ws2_32.lib")
+#include <iostream>
+
+namespace meshy {
+	WindowsSocketInitializer::WindowsSocketInitializer() {
+		WORD wVersionRequested = MAKEWORD(2, 2);
+		WSADATA wsaData;
+		DWORD err = WSAStartup(wVersionRequested, &wsaData);
+		if (err)
+		{
+			std::cerr << "Request Windows Socket Library Error!" << std::endl;
+			throw std::exception("Request Windows Socket Library Error!");
+		}
+		if (LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaData.wVersion) != 2) {
+			WSACleanup();
+			std::cerr << "Request Windows Socket Version 2.2 Error!" << std::endl;
+			throw std::exception("Request Windows Socket Version 2.2 Error!");
+		}
+	}
+}
+#endif // OS_WIN32

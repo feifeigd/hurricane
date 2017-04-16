@@ -13,6 +13,7 @@ namespace HurricaneUtils {
 		auto milliseconds = duration_cast<std::chrono::milliseconds>(currentTime.time_since_epoch() % 1000);
 		auto currentTimePoint = system_clock::to_time_t(currentTime);
 		std::ostringstream oss;
+		// "%H:%M:%S.abc"
 #if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__)) && !defined(__MINGW32__)
 		oss << std::put_time(std::localtime(&currentTimePoint), "%T");
 #else

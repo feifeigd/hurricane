@@ -3,6 +3,8 @@
 #include "IODevice.hpp"
 #include "ByteArray.h"
 
+#include <string.h>
+
 namespace meshy {
 	class ByteArrayReader : public IODevice
 	{

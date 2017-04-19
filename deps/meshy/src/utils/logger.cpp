@@ -2,6 +2,7 @@
 #include <utils/time.h>
 #include <iostream>
 #include <sstream>
+#include <thread>
 
 using meshy::Logger;
 using meshy::Priority;
@@ -43,7 +44,7 @@ Priority Logger::GetPriority()const {
 
 void Logger::InitializeFileStream() {
 	std::string fileName("logs/log.log");
-	m_fileStream = std::ofstream(fileName, std::ios_base::out | std::ios_base::trunc);
+	m_fileStream.open(fileName, std::ios_base::out | std::ios_base::trunc);
 	if (!m_fileStream) {
 		std::ostringstream ss_error;
 		ss_error << "FATAL ERROR: could not Open log file: [" << fileName << "]"

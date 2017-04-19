@@ -13,7 +13,7 @@ namespace meshy {
 #if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__)) && !defined(__MINGW32__)
 		return htonll(hostll);
 #else
-		return htobe64(networks);
+		return htobe64(hostll);
 #endif // (defined(WIN32) || defined(_WIN32) || defined(__WIN32__)) && !defined(__MINGW32__)
 	}
 

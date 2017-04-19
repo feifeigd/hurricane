@@ -1,4 +1,5 @@
 #include <ByteArray.h>
+#include <string.h>
 
 using meshy::ByteArray;
 

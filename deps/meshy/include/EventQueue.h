@@ -3,6 +3,7 @@
 #include <mutex>
 #include <vector>
 #include <memory>
+#include <condition_variable>
 
 namespace meshy {
 

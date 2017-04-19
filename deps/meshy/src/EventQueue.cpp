@@ -1,5 +1,7 @@
 #include <EventQueue.h>
 
+#include <BaseEvent.h>
+
 using meshy::EventQueue;
 using meshy::BaseEvent;
 

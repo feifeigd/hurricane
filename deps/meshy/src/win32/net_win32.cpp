@@ -1,6 +1,4 @@
 
-#ifdef OS_WIN32
-
 #include <win32/net_win32.h>
 #pragma comment(lib, "ws2_32.lib")
 #include <iostream>
@@ -22,4 +20,3 @@ namespace meshy {
 		}
 	}
 }
-#endif // OS_WIN32

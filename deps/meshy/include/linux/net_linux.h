@@ -5,5 +5,5 @@
 
 namespace meshy{
 	typedef int32_t NativeSocket;
-	typedef ::epoll_event NativateSocketEvent;
+	typedef ::epoll_event NativeSocketEvent;
 }

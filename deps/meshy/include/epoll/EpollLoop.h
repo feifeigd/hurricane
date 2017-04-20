@@ -1,6 +1,8 @@
 ﻿#pragma once
 
 #include "../loop.h"
+#include "../linux/common.h"
+#include "../linux/net_linux.h"
 
 namespace meshy {
 

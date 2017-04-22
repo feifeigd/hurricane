@@ -1,6 +1,9 @@
 #pragma once
 
 #include <cstdint>
+#ifdef OS_LINUX
+using std::size_t;
+#endif
 
 namespace meshy {
 	class IStream;

@@ -38,9 +38,9 @@ namespace meshy {
 		bool							m_shutdown;
 	};
 
-#define TRACE_DEBUG(content)	Logger::get().WriteLog(Priority::DEBUG, content)
-#define TRACE_STATE(content)	Logger::get().WriteLog(Priority::STATE, content)
-#define TRACE_INFO(content)		Logger::get().WriteLog(Priority::INFO, content)
-#define TRACE_WARNING(content)	Logger::get().WriteLog(Priority::WARNING, content)
-#define TRACE_ERROR(content)	Logger::get().WriteLog(Priority::ERROR, content)
+#define TRACE_DEBUG(content)	meshy::Logger::get().WriteLog(Priority::DEBUG, content)
+#define TRACE_STATE(content)	meshy::Logger::get().WriteLog(Priority::STATE, content)
+#define TRACE_INFO(content)		meshy::Logger::get().WriteLog(Priority::INFO, content)
+#define TRACE_WARNING(content)	meshy::Logger::get().WriteLog(Priority::WARNING, content)
+#define TRACE_ERROR(content)	meshy::Logger::get().WriteLog(Priority::ERROR, content)
 }

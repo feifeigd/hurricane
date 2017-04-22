@@ -14,15 +14,26 @@ namespace meshy {
 	class EpollLoop : public Loop {
 	public:
 		static EpollLoop& get();
+		virtual ~EpollLoop();
+		
+		void AddServer(NativeSocket socket, EpollServer* server);
+		void AddStream(EpollStreamPtr stream);
+
+		/// 对epoll_ctl的简单封装
+		int32_t AddEpollEvents(int32_t events, NativeSocket fd);
+		int32_t ModifyEpollEvents(int32_t events, NativeSocket fd);
 
 	protected:
+		EpollLoop();
 		virtual void run()override;
 
 	private:
+		void initialize();
 		void EpollThread();
 		void HandleEvent(NativeSocketEvent* events, int32_t nfds);
-		void accept(int32_t listenfd);
-		void read(int32_t fd, uint32_t events);
+		void accept(NativeSocket listenfd);
+		void read(NativeSocket fd, uint32_t events);
+		void enqueue(EpollStreamPtr connection, char const* buf, size_t nread);
 
 	private:
 		int32_t									m_eventfd;

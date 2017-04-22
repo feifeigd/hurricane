@@ -6,6 +6,6 @@ Loop::~Loop() {
 	
 }
 
-void Loop::star() {
+void Loop::start() {
 	run();
 }

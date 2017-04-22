@@ -28,7 +28,9 @@ set(COMMON_FILES
 
 if(UNIX)
 	set(PLATFORM_SRC
+		src/epoll/EpollConnection.cpp
 		src/epoll/EpollLoop.cpp
+		src/epoll/EpollServer.cpp
 	)
 else()
 	set(PLATFORM_SRC
@@ -39,3 +41,6 @@ endif()
 # file(GLOB_RECURSE SOURCE_FILES src/*.h src/*.cpp )
 set(SOURCE_FILES ${COMMON_FILES} ${PLATFORM_SRC})
 add_library(meshy ${SOURCE_FILES})
+
+add_executable(net_framework src/sample.cpp)
+target_link_libraries(net_framework meshy)

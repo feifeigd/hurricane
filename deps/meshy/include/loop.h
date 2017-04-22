@@ -6,7 +6,7 @@ namespace meshy {
 	public:
 		virtual ~Loop();
 
-		void star();
+		void start();
 
 	protected:
 		virtual void run() = 0;

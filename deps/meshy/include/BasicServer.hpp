@@ -4,6 +4,9 @@
 #include <functional>
 
 namespace meshy {
+	
+	class IStream;
+
 	template<typename ConnectionType>
 	class BasicServer : public Socket {
 	public:

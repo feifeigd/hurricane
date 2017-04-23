@@ -19,4 +19,9 @@ namespace meshy {
 			throw std::exception("Request Windows Socket Version 2.2 Error!");
 		}
 	}
+
+	void WindowsSocketInitializer::initialize() {
+		static WindowsSocketInitializer init;
+	}
+
 }

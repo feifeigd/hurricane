@@ -1,6 +1,6 @@
 #pragma once
 
-#include <WinSock2.h>
+#include "WinSock2i.h"
 
 namespace meshy {
 

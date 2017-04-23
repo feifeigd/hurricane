@@ -2,6 +2,7 @@
 
 using meshy::Socket;
 using meshy::NativeSocket;
+#pragma comment(lib, "Ws2_32.lib")	// closesocket
 
 Socket::Socket(NativeSocket nativeSocket)
 	: m_nativeSocket(nativeSocket)

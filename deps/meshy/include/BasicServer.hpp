@@ -14,6 +14,6 @@ namespace meshy {
 		virtual void OnConnectIndication(ConnectIndicationHandler handler) = 0;
 		virtual void OnDisconnectIndication(DisconnectIndicationHandler handler) = 0;
 
-		virtual ConnectionType accept(int32_t listenfd) = 0;
+		virtual ConnectionType accept() = 0;
 	};
 }

@@ -13,7 +13,7 @@ namespace meshy {
 		STATE,
 		INFO,
 		WARNING,
-		ERROR,
+		Error,
 	};
 
 	class Logger
@@ -42,5 +42,5 @@ namespace meshy {
 #define TRACE_STATE(content)	meshy::Logger::get().WriteLog(Priority::STATE, content)
 #define TRACE_INFO(content)		meshy::Logger::get().WriteLog(Priority::INFO, content)
 #define TRACE_WARNING(content)	meshy::Logger::get().WriteLog(Priority::WARNING, content)
-#define TRACE_ERROR(content)	meshy::Logger::get().WriteLog(Priority::ERROR, content)
+#define TRACE_ERROR(content)	meshy::Logger::get().WriteLog(Priority::Error, content)
 }

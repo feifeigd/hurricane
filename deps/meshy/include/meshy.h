@@ -7,7 +7,7 @@
 #ifdef OS_LINUX
 #include "epoll/EpollServer.h"
 #elif defined(OS_WIN32)
-#include "iocp/IOCPServer.h"
+#include "iocp/IocpServer.h"
 #endif
 
 #include "EventQueue.h"
@@ -16,7 +16,7 @@ namespace meshy{
 #ifdef OS_LINUX
 	typedef EpollServer	TcpServer;
 #elif defined(OS_WIN32)
-	typedef IOCPServer	TcpServer;
+	typedef IocpServer	TcpServer;
 #endif	
 }
 

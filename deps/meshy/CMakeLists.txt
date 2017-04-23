@@ -33,7 +33,14 @@ if(UNIX)
 		src/epoll/EpollServer.cpp
 	)
 else()
-	set(PLATFORM_SRC
+	set(PLATFORM_SRC	
+		include/iocp/IocpServer.h
+		include/iocp/IocpStream.h
+		src/iocp/Iocp.cpp
+		src/iocp/IocpLoop.cpp
+		src/iocp/IocpServer.cpp
+		src/iocp/IocpStream.cpp
+		src/iocp/WSAConnection.cpp
 		src/win32/net_win32.cpp
 	)
 endif()

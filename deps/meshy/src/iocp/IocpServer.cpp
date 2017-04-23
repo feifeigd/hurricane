@@ -13,24 +13,6 @@ IocpServer::IocpServer() : m_completionPort(nullptr)
 	WindowsSocketInitializer::initialize();
 }
 
-int32_t IocpServer::bind(std::string const& host, uint16_t port) {
-	NativeSocket listenfd = socket(AF_INET, SOCK_STREAM, 0);
-	int32_t option = 1;
-	setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, (char*)&option, sizeof(option));
-	NativeSocketAddress srvAddr;
-	inet_pton(AF_INET, host.c_str(), &srvAddr.sin_addr);
-	srvAddr.sin_family = AF_INET;
-	srvAddr.sin_port = htons(port);
-	int32_t errorCode = ::bind(listenfd, (SOCKADDR*)&srvAddr, sizeof(SOCKADDR));
-	if (SOCKET_ERROR == errorCode)
-	{
-		TRACE_ERROR("Bind failed. Error: " + GetLastError());
-		assert(false);
-		return errorCode;
-	}
-	SetNativeSocket(listenfd);
-	return 0;
-}
 
 int32_t IocpServer::listen(std::string const& host, uint16_t port, int backlog) {
 	NativeSocket listenfd = GetNativeSocket();

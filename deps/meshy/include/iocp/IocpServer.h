@@ -7,7 +7,6 @@ namespace meshy {
 	public:
 		IocpServer();
 
-		int32_t bind(std::string const& host, uint16_t port);
 		virtual int32_t listen(std::string const& host, uint16_t port, int backlog = 20)override;
 		virtual WSAConnectionPtr accept()override;
 

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "socket.h"
+#include "utils/logger.h"
+#include <cassert>
 #include <functional>
 
 namespace meshy {
@@ -22,14 +24,16 @@ namespace meshy {
 			}
 			int32_t option = 1;
 			setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, (char*)&option, sizeof(option));
-			NativeSocketAddress srvAddr;
-			inet_pton(AF_INET, host.c_str(), &srvAddr.sin_addr);
+			NativeSocketAddress srvAddr = {0};
+			//inet_pton(AF_INET, host.c_str(), &srvAddr.sin_addr);
+			inet_aton(host.c_str(), &srvAddr.sin_addr);
+			//srvAddr.sin_addr.s_addr = inet_addr(host.c_str());
 			srvAddr.sin_family = AF_INET;
 			srvAddr.sin_port = htons(port);
 			int32_t errorCode = ::bind(listenfd, (sockaddr*)&srvAddr, sizeof(sockaddr));
-			if (SOCKET_ERROR == errorCode)
+			if (errorCode < 0)
 			{
-				TRACE_ERROR("Bind failed. Error: " + GetLastError());
+				TRACE_ERROR("Bind failed. Error: " + errno);
 				assert(false);
 				return errorCode;
 			}

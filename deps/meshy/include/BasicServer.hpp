@@ -1,6 +1,7 @@
 #pragma once
 
 #include "socket.h"
+#include "utils/common_utils.h"
 #include "utils/logger.h"
 #include <cassert>
 #include <functional>
@@ -15,6 +16,7 @@ namespace meshy {
 		typedef std::function<void(IStream*)> ConnectIndicationHandler;
 		typedef std::function<void(IStream*)> DisconnectIndicationHandler;
 
+	protected:
 		int32_t bind(std::string const& host, uint16_t port) {
 			NativeSocket listenfd = socket(AF_INET, SOCK_STREAM, 0);
 			if (listenfd < 0)
@@ -24,9 +26,14 @@ namespace meshy {
 			}
 			int32_t option = 1;
 			setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, (char*)&option, sizeof(option));
+			SetNonBlocking(listenfd);
 			NativeSocketAddress srvAddr = {0};
-			//inet_pton(AF_INET, host.c_str(), &srvAddr.sin_addr);
+#ifdef OS_WIN32
+			inet_pton(AF_INET, host.c_str(), &srvAddr.sin_addr);
+#elif defined(OS_LINUX)
 			inet_aton(host.c_str(), &srvAddr.sin_addr);
+#endif // OS_WIN32
+
 			//srvAddr.sin_addr.s_addr = inet_addr(host.c_str());
 			srvAddr.sin_family = AF_INET;
 			srvAddr.sin_port = htons(port);
@@ -41,6 +48,7 @@ namespace meshy {
 			return 0;
 		}
 
+	public:
 		virtual int32_t listen(std::string const& host, uint16_t port, int backlog) = 0;
 		virtual void OnConnectIndication(ConnectIndicationHandler handler) = 0;
 		virtual void OnDisconnectIndication(DisconnectIndicationHandler handler) = 0;

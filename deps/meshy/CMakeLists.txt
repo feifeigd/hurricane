@@ -9,6 +9,7 @@ set(COMMON_FILES
 	include/EventQueueLoop.h
 	include/loop.h
 	include/socket.h
+	include/utils/common_utils.h
 	include/utils/exendian.h
 	include/utils/logger.h
 	include/utils/time.h
@@ -21,6 +22,7 @@ set(COMMON_FILES
 	src/EventQueueLoop.cpp
 	src/loop.cpp
 	src/socket.cpp
+	src/utils/common_utils.cpp
 	src/utils/exendian.cpp
 	src/utils/logger.cpp
 	src/utils/time.cpp

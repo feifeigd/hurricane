@@ -15,6 +15,8 @@ IocpServer::IocpServer() : m_completionPort(nullptr)
 
 
 int32_t IocpServer::listen(std::string const& host, uint16_t port, int backlog) {
+	bind(host, port);
+
 	NativeSocket listenfd = GetNativeSocket();
 	int32_t errorCode = ::listen(listenfd, backlog);
 	if (SOCKET_ERROR == errorCode)

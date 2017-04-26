@@ -23,7 +23,6 @@ namespace meshy {
 		}
 		return 0;
 	}
-}
 #elif defined(OS_WIN32)
 	int32_t SetNonBlocking(int32_t sockfd) {
 		u_long ul = 1;

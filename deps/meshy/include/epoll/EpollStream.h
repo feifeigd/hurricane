@@ -6,7 +6,17 @@
 
 namespace meshy{
 	class EpollStream : public BasicStream{
+		EpollStream(EpollStream const&) = delete;
 	public:
+		EpollStream(NativeSocket socket);
+
+		virtual size_t receive(char* buffer, size_t bufferSize, size_t& readSize)override;
+		virtual size_t send(ByteArray const& byteArray)override;
+
+		void events(uint32_t evts);
+		uint32_t events()const;
+	protected:
+		uint32_t	m_events;
 	};
 
 	typedef std::shared_ptr<EpollStream>	EpollStreamPtr;

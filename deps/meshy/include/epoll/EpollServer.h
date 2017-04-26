@@ -7,9 +7,9 @@
 namespace meshy{
 	class EpollServer : public BasicServer<EpollConnectionPtr> {
 	public:
-		virtual int32_t bind(std::string const& host, uint16_t port);
-		EpollConnectionPtr accept(NativeSocket sockfd);
-
+		virtual int32_t listen(std::string const& host, uint16_t port, int backlog)override;
+	
+		EpollConnectionPtr accept();
 	};	
 }
 

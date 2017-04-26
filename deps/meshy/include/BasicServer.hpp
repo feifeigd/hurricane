@@ -1,6 +1,7 @@
 #pragma once
 
 #include "socket.h"
+#include "utils/common_utils.h"
 #include "utils/logger.h"
 #include <cassert>
 #include <functional>
@@ -41,10 +42,19 @@ namespace meshy {
 			return 0;
 		}
 
-		virtual int32_t listen(std::string const& host, uint16_t port, int backlog) = 0;
-		virtual void OnConnectIndication(ConnectIndicationHandler handler) = 0;
-		virtual void OnDisconnectIndication(DisconnectIndicationHandler handler) = 0;
+		void OnConnectIndication(ConnectIndicationHandler handler){
+			m_connectHandler = handler;
+		}
 
+		void OnDisconnectIndication(DisconnectIndicationHandler handler){
+			m_disconnectIndication = handler;
+		}
+
+		virtual int32_t listen(std::string const& host, uint16_t port, int backlog) = 0;
 		virtual ConnectionType accept() = 0;
+
+	protected:
+		ConnectIndicationHandler	m_connectHandler;
+		DisconnectIndicationHandler	m_disconnectIndication;
 	};
 }

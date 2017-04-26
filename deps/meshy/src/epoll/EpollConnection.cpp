@@ -3,4 +3,9 @@
 
 using meshy::EpollConnection;
 
+EpollConnection::EpollConnection(NativeSocket socket)
+	: EpollStream(socket)
+{
+
+}
 

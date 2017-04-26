@@ -101,7 +101,7 @@ void EpollLoop::HandleEvent(NativeSocketEvent* events, int32_t nfds){
 void EpollLoop::accept(NativeSocket listenfd){
 	TRACE_DEBUG(__FUNCTION__);
 	EpollServer* server = m_servers.find(listenfd)->second;
-	EpollConnectionPtr connection = server->accept(m_eventfd);
+	EpollConnectionPtr connection = server->accept();
 	if(connection) m_streams[connection->GetNativeSocket()] = connection;
 }
 

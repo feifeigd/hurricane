@@ -28,6 +28,7 @@ set(COMMON_FILES
 
 if(UNIX)
 	set(PLATFORM_SRC
+		src/epoll/EpollClient.cpp
 		src/epoll/EpollConnection.cpp
 		src/epoll/EpollLoop.cpp
 		src/epoll/EpollServer.cpp

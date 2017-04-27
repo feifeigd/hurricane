@@ -7,11 +7,13 @@ set(COMMON_FILES
 	include/ByteArrayWriter.h
 	include/EventQueue.h
 	include/EventQueueLoop.h
+	include/http/HttpContext.h
 	include/loop.h
 	include/socket.h
 	include/utils/common_utils.h
 	include/utils/exendian.h
 	include/utils/logger.h
+	include/utils/String.h
 	include/utils/time.h
 	src/BaseEvent.cpp
 	src/BasicStream.cpp
@@ -20,11 +22,13 @@ set(COMMON_FILES
 	src/ByteArrayWriter.cpp
 	src/EventQueue.cpp
 	src/EventQueueLoop.cpp
+	src/http/HttpContext.cpp
 	src/loop.cpp
 	src/socket.cpp
 	src/utils/common_utils.cpp
 	src/utils/exendian.cpp
 	src/utils/logger.cpp
+	src/utils/String.cpp
 	src/utils/time.cpp
 )
 

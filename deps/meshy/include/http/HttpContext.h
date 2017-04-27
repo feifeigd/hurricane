@@ -20,7 +20,7 @@ public:
 	std::string const& version()const;
 	void version(std::string const& ver);
 
-	void ParseStdStringList(StdStringList const& stringList);
+	virtual void ParseStdStringList(StdStringList const& stringList);
 	std::string ToStdString()const;
 
 	static HttpContext FromStdStringList(StdStringList const& stringList);

@@ -21,11 +21,12 @@ public:
 	void version(std::string const& ver);
 
 	virtual void ParseStdStringList(StdStringList const& stringList);
-	std::string ToStdString()const;
+	virtual std::string ToStdString()const;
 
 	static HttpContext FromStdStringList(StdStringList const& stringList);
-private:
+protected:
 	std::string							m_version;
+private:
 	std::map<std::string, std::string>	m_headers;
 	std::string							m_content;
 };

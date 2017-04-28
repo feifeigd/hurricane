@@ -9,6 +9,7 @@ set(COMMON_FILES
 	include/EventQueueLoop.h
 	include/http/HttpContext.h
 	include/http/HttpRequest.h
+	include/http/HttpResponse.h
 	include/loop.h
 	include/socket.h
 	include/utils/common_utils.h
@@ -25,6 +26,7 @@ set(COMMON_FILES
 	src/EventQueueLoop.cpp
 	src/http/HttpContext.cpp
 	src/http/HttpRequest.cpp
+	src/http/HttpResponse.cpp
 	src/loop.cpp
 	src/socket.cpp
 	src/utils/common_utils.cpp

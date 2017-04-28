@@ -1,5 +1,6 @@
 
 set(COMMON_FILES
+	include/meshy.h
 	include/BaseEvent.h
 	include/BasicStream.h
 	include/ByteArray.h
@@ -7,6 +8,7 @@ set(COMMON_FILES
 	include/ByteArrayWriter.h
 	include/EventQueue.h
 	include/EventQueueLoop.h
+	include/http/HttpConnection.h
 	include/http/HttpContext.h
 	include/http/HttpRequest.h
 	include/http/HttpResponse.h
@@ -24,6 +26,7 @@ set(COMMON_FILES
 	src/ByteArrayWriter.cpp
 	src/EventQueue.cpp
 	src/EventQueueLoop.cpp
+	src/http/HttpConnection.cpp
 	src/http/HttpContext.cpp
 	src/http/HttpRequest.cpp
 	src/http/HttpResponse.cpp

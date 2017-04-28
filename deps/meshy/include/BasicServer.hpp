@@ -48,6 +48,7 @@ namespace meshy {
 			return 0;
 		}
 
+	public:
 		void OnConnectIndication(ConnectIndicationHandler handler){
 			m_connectHandler = handler;
 		}
@@ -55,7 +56,6 @@ namespace meshy {
 		void OnDisconnectIndication(DisconnectIndicationHandler handler){
 			m_disconnectIndication = handler;
 		}
-	public:
 		virtual int32_t listen(std::string const& host, uint16_t port, int backlog) = 0;
 		virtual ConnectionType accept() = 0;
 

@@ -12,6 +12,7 @@ set(COMMON_FILES
 	include/http/HttpContext.h
 	include/http/HttpRequest.h
 	include/http/HttpResponse.h
+	include/http/HttpServer.h
 	include/loop.h
 	include/socket.h
 	include/utils/common_utils.h
@@ -30,6 +31,7 @@ set(COMMON_FILES
 	src/http/HttpContext.cpp
 	src/http/HttpRequest.cpp
 	src/http/HttpResponse.cpp
+	src/http/HttpServer.cpp
 	src/loop.cpp
 	src/socket.cpp
 	src/utils/common_utils.cpp

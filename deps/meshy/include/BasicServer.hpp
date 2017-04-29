@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "socket.h"
 #include "utils/common_utils.h"
@@ -8,13 +8,16 @@
 
 namespace meshy {
 	
+	class DataSink;
 	class IStream;
-
+	
 	template<typename ConnectionType>
 	class BasicServer : public Socket {
 	public:
 		typedef std::function<void(IStream*)> ConnectIndicationHandler;
 		typedef std::function<void(IStream*)> DisconnectIndicationHandler;
+
+		BasicServer(DataSink* dataSink = nullptr) : m_dataSink(dataSink) {}
 
 	protected:
 		int32_t bind(std::string const& host, uint16_t port) {
@@ -26,11 +29,11 @@ namespace meshy {
 			}
 			int32_t option = 1;
 			setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, (char*)&option, sizeof(option));
-			SetNonBlocking(listenfd);
 			NativeSocketAddress srvAddr = {0};
 #ifdef OS_WIN32
 			inet_pton(AF_INET, host.c_str(), &srvAddr.sin_addr);
 #elif defined(OS_LINUX)
+			SetNonBlocking(listenfd);	// windows 监听的socket 不要设置为非阻塞
 			inet_aton(host.c_str(), &srvAddr.sin_addr);
 #endif // OS_WIN32
 
@@ -59,8 +62,14 @@ namespace meshy {
 		virtual int32_t listen(std::string const& host, uint16_t port, int backlog) = 0;
 		virtual ConnectionType accept() = 0;
 
+		void SetDataSink(DataSink* dataSink) { m_dataSink = dataSink; }
+		DataSink* GetDataSink() { return m_dataSink; }
+
 	protected:
 		ConnectIndicationHandler	m_connectHandler;
 		DisconnectIndicationHandler	m_disconnectIndication;
+	private:
+		/// 每个服务器共享一个, 这里只是关联，不拥有内存所有权
+		DataSink*	m_dataSink;
 	};
 }

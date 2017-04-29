@@ -2,6 +2,7 @@
 set(COMMON_FILES
 	include/meshy.h
 	include/BaseEvent.h
+	include/BasicServer.hpp
 	include/BasicStream.h
 	include/ByteArray.h
 	include/ByteArrayReader.h
@@ -14,6 +15,7 @@ set(COMMON_FILES
 	include/http/HttpResponse.h
 	include/http/HttpServer.h
 	include/loop.h
+	include/PackageDataSink.h
 	include/socket.h
 	include/utils/common_utils.h
 	include/utils/exendian.h
@@ -33,6 +35,7 @@ set(COMMON_FILES
 	src/http/HttpResponse.cpp
 	src/http/HttpServer.cpp
 	src/loop.cpp
+	src/PackageDataSink.cpp
 	src/socket.cpp
 	src/utils/common_utils.cpp
 	src/utils/exendian.cpp

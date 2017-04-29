@@ -4,11 +4,12 @@
 #include <cassert>
 #include <WS2tcpip.h>	// inet_pton
 
+using meshy::DataSink;
 using meshy::IocpServer;
 using meshy::NativeSocket;
 using meshy::WSAConnectionPtr;
 
-IocpServer::IocpServer() : m_completionPort(nullptr)
+IocpServer::IocpServer(DataSink* dataSink) : BasicServer<WSAConnectionPtr>(dataSink), m_completionPort(nullptr)
 {
 	WindowsSocketInitializer::initialize();
 }
@@ -39,6 +40,11 @@ WSAConnectionPtr IocpServer::accept() {
 		throw std::exception("Accept Socket Error: ");
 	}
 	WSAConnectionPtr connection = std::make_shared<WSAConnection>(acceptSocket, saRemote);
+	connection->SetDataSink(GetDataSink());
+	if (m_connectHandler)m_connectHandler(connection.get());
+	char buf[250];
+	sprintf(buf, "Accept socket socket=%d", acceptSocket);
+	TRACE_DEBUG(buf);
 	Iocp::OperationDataPtr perIoData = Iocp::CreateOperationData(connection, m_completionPort);
 	connection->SetOperationData(perIoData);
 

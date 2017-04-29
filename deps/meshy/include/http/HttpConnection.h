@@ -16,9 +16,10 @@ namespace meshy {
 
 		void HandleData(char const* buffer, size_t size);
 		void OnData(DataHandler handler);
+		void OnRequest(RequestHandler handler);
 
 		void SendResponse(HttpResponse const& response);
-
+		TcpConnection* connection() { return m_connection; };
 	private:
 		TcpConnection*	m_connection;
 		HttpRequest		m_request;

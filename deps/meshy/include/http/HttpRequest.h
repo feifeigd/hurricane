@@ -8,7 +8,7 @@ namespace meshy {
 		void ParseStdString(std::string const& text);
 		virtual void ParseStdStringList(StdStringList const& stringList)override;
 
-		static HttpRequest FromStdString(std::string const text);
+		static HttpRequest FromStdString(std::string const& text);
 		static HttpRequest FromStdStringList(StdStringList const& stringList);
 
 		std::string const& method()const;

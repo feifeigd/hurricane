@@ -39,6 +39,9 @@ size_t IocpStream::send(ByteArray const& byteArray) {
 			}
 			break;
 		}
+		char buf[256];
+		sprintf(buf, "%s:socket=%d, nwrite=%d", __FUNCTION__, fd, nwrite);
+		TRACE_DEBUG(buf);
 		n -= nwrite;
 	}
 	return data_size - n;

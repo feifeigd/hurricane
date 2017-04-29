@@ -19,12 +19,13 @@ void HttpRequest::ParseStdStringList(StdStringList const& stringList) {
 
 void HttpRequest::ParseRequestLine(std::string const& requestLine) {
 	StdStringList words = SplitString(requestLine, ' ');
+	if (words.empty())return;
 	method(words[0]);
 	path(words[1]);
 	version(words[2]);
 }
 
-HttpRequest HttpRequest::FromStdString(std::string const text) {
+HttpRequest HttpRequest::FromStdString(std::string const& text) {
 	HttpRequest request;
 	request.ParseStdString(text);
 	return request;

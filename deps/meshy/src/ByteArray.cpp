@@ -18,6 +18,10 @@ ByteArray::ByteArray(std::string const& data) : std::vector<char>(data.c_str(), 
 
 }
 
+std::string ByteArray::ToStdString()const {
+	return std::string(cbegin(), cend());
+}
+
 ByteArray& ByteArray::concat(ByteArray const& data) {
 	size_t oldsize = size();
 	size_t appendsize = data.size();

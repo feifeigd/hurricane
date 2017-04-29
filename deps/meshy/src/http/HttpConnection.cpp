@@ -24,6 +24,10 @@ void HttpConnection::OnData(DataHandler handler) {
 	m_dataHandler = handler;
 }
 
+void HttpConnection::OnRequest(RequestHandler handler) {
+	m_requestHandler = handler;
+}
+
 void HttpConnection::SendResponse(HttpResponse const& response) {
 	m_response = response;
 	m_connection->send(m_response.ToStdString());

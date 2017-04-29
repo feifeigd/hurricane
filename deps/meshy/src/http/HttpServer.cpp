@@ -1,6 +1,11 @@
 #include <http/HttpServer.h>
 
+using meshy::DataSink;
 using meshy::HttpServer;
+
+HttpServer::HttpServer(DataSink* dataSink) : m_server(dataSink){
+
+}
 
 void HttpServer::listen(std::string const& host, uint16_t port, int backlog) {
 	m_server.listen(host, port, backlog);

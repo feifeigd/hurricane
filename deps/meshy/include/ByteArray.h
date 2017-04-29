@@ -13,6 +13,8 @@ namespace meshy {
 		ByteArray(char const* buffer, std::size_t size);
 		ByteArray(std::string const& data);
 
+		std::string ToStdString()const;
+
 		ByteArray& concat(ByteArray const& data);
 		ByteArray operator+(ByteArray const& data);
 	private:

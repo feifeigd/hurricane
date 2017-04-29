@@ -5,6 +5,10 @@
 using meshy::EpollServer;
 using meshy::EpollConnectionPtr;
 
+EpollServer::EpollServer(DataSink* dataSink) : BasicServer<EpollConnectionPtr>(dataSink)
+{
+}
+
 int32_t EpollServer::listen(std::string const& host, uint16_t port, int backlog){
 	bind(host, port);
 

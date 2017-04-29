@@ -1,4 +1,5 @@
 
+
 set(COMMON_FILES
 	include/meshy.h
 	include/BaseEvent.h
@@ -50,6 +51,7 @@ if(UNIX)
 		src/epoll/EpollConnection.cpp
 		src/epoll/EpollLoop.cpp
 		src/epoll/EpollServer.cpp
+		src/epoll/EpollStream.cpp
 	)
 else()
 	set(PLATFORM_SRC	
@@ -70,3 +72,8 @@ add_library(meshy ${SOURCE_FILES})
 
 add_executable(net_framework src/sample.cpp)
 target_link_libraries(net_framework meshy)
+
+if(UNIX)
+	target_link_libraries(net_framework pthread)
+endif()
+

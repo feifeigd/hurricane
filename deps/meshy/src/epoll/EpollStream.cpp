@@ -1,5 +1,9 @@
 
+#include <ByteArray.h>
+#include <epoll/EpollLoop.h>
 #include <epoll/EpollStream.h>
+//#include <utils/common_utils.h>
+#include <utils/logger.h>
 
 using meshy::EpollStream;
 
@@ -21,7 +25,7 @@ size_t EpollStream::receive(char* buffer, size_t bufferSize, size_t& readSize){
 
 size_t EpollStream::send(ByteArray const& byteArray){
 	TRACE_DEBUG("EpollStream::send");
-	NativeSocket fd = GetNativeSockeet();
+	NativeSocket fd = GetNativeSocket();
 	if(EpollLoop::get().ModifyEpollEvents(m_events | EPOLLOUT, fd)){
 		TRACE_ERROR("FATAL epoll_ctl: mod failed!");
 	}
@@ -41,7 +45,7 @@ size_t EpollStream::send(ByteArray const& byteArray){
 	return 0;
 }
 
-EpollStream::events()const{
+uint32_t EpollStream::events()const{
 	return m_events;
 }
 

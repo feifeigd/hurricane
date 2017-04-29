@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "concurrent_queue.h"
-
+#include <thread>
 #include <functional>
 
 #define MIN_THREADS 2

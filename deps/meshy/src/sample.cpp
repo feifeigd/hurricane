@@ -41,7 +41,7 @@ int main(){
 			cout << "Data arrived" << "\n" << data << endl;
 		});
 	});
-	server.listen("127.0.0.1", 9000);
+	server.listen("0.0.0.0", 9000);
 
 	SampleEventQueueLoop sampleQueue(&mainEventQueue);
 	sampleQueue.start();

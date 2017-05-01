@@ -12,9 +12,12 @@ namespace meshy {
 	public:
 		BasicStream(NativeSocket nativeSocket = 0);
 
-		virtual void SetDataSink(DataSink* dataSink);
-		virtual DataSink* GetDataSink();
+		void SetDataSink(DataSink* dataSink);
+		DataSink* GetDataSink();
+
+		virtual void OnDataIndication(DataIndicationHandler handler)override { m_dataHandler = handler; }
 	private:
+		DataIndicationHandler	m_dataHandler;
 		DataSink*	m_dataSink;
 	};
 }

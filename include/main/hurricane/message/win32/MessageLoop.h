@@ -1,5 +1,9 @@
 ﻿#pragma once
 
+#include <functional>
+#include <cstdint>
+#include <map>
+
 class Message;
 
 class MessageLoop
@@ -9,7 +13,7 @@ class MessageLoop
 public:
 	typedef std::function<void(Message*)>	MessageHandler;
 
-	MessageLoop() m_threadId(GetCurrentThreadId()) { }
+	MessageLoop() : m_threadId(GetCurrentThreadId()) { }
 	
 	template<typename ObjectType,typename MethodType>
 	void MessageMap(int messageType, ObjectType* self, MethodType method) {
@@ -23,7 +27,7 @@ public:
 	// 启动消息队列
 	void run() {
 		MSG msg;
-		while (GetMessage(&msg, 0, 0, 0) {
+		while (GetMessage(&msg, 0, 0, 0)) {
 			std::cout << "Recived Message" << std::endl;
 			auto handler = m_messageHandlers.find(msg.messsage);
 			if (handler != m_messageHandlers.end())

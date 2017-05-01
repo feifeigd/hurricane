@@ -4,7 +4,7 @@
 
 namespace hurricane {
 
-	namespace { class OutputCollector; }
+	namespace base{ class OutputCollector; }
 
 	namespace spout {
 

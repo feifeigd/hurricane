@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include "Fields.h"
+
 namespace hurricane {
 	namespace base {
 		/// 任务接口

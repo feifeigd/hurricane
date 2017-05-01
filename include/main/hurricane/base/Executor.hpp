@@ -45,6 +45,7 @@ namespace hurricane {
 				OnStop();
 			}
 
+			std::thread	m_thread;
 			Status		m_status;
 			std::string m_taskName;
 		};

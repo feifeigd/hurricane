@@ -14,7 +14,7 @@ namespace meshy{
 		EpollClient(EpollClient const&) = delete;
 	public:
 		virtual void connect(std::string const& host, uint16_t port)override;
-		static EpollClientPtr connect(std::string const& host, uint16_t port, DataSink* dataSink);
+		static EpollClientPtr Connect(std::string const& host, uint16_t port, DataSink* dataSink);
 
 	private:
 		EpollClient(NativeSocket socket);

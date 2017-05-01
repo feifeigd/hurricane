@@ -15,17 +15,17 @@ EpollClient::EpollClient(NativeSocket socket)
 }
 
 void EpollClient::connect(std::string const& host, uint16_t port){
-	NativeSocketAddress serv_addr = {0};
-	serv_addr.sin_family = AF_INET;
-	serv_addr.sin_addr.s_addr = inet_addr(host.c_str());
-	serv_addr.sin_port = htons(port);
+	m_nativeSocketAddress = {0};
+	m_nativeSocketAddress.sin_family = AF_INET;
+	m_nativeSocketAddress.sin_addr.s_addr = inet_addr(host.c_str());
+	m_nativeSocketAddress.sin_port = htons(port);
 
 	NativeSocket fd = GetNativeSocket();
 	meshy::SetNonBlocking(fd);
-	::connect(fd, (sockaddr*)&serv_addr, sizeof(serv_addr));
+	::connect(fd, (sockaddr*)&m_nativeSocketAddress, sizeof(m_nativeSocketAddress));
 }
 
-EpollClientPtr EpollClient::connect(std::string const& host, uint16_t port, DataSink* dataSink){
+EpollClientPtr EpollClient::Connect(std::string const& host, uint16_t port, DataSink* dataSink){
 	NativeSocket fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	EpollClientPtr client = EpollClientPtr(new EpollClient(fd));
 	client->SetDataSink(dataSink);

@@ -23,15 +23,18 @@ include_directories(include/main)
 add_executable(hurricane main.cpp)
 target_link_libraries(hurricane meshy)
 
-add_executable(nimbus src/main/hurricane/SupervisorLauncher.cpp
+set(COMMON_SRC 
+	include/main/hurricane/base/DataPackage.h
 	include/main/hurricane/base/NetAddress.h
 	include/main/hurricane/base/NetConnector.h
 	include/main/hurricane/base/NetListener.h
+	include/main/hurricane/base/Node.h
 	include/main/hurricane/base/Executor.hpp	
 	include/main/hurricane/base/OutputCollector.h
 	include/main/hurricane/base/TopologyLoader.h
 	include/main/hurricane/base/Value.h	
 	include/main/hurricane/base/Values.h
+	include/main/hurricane/base/Variant.h
 	include/main/hurricane/message/Command.h
 	include/main/hurricane/message/CommandDispatcher.h
 	include/main/hurricane/message/Message.h
@@ -39,17 +42,27 @@ add_executable(nimbus src/main/hurricane/SupervisorLauncher.cpp
 	include/main/hurricane/message/SupervisorCommander.h
 	include/main/hurricane/spout/SpoutExecutor.h
 	include/main/hurricane/spout/SpoutOutputCollector.h
+	src/main/hurricane/base/DataPackage.cpp
 	src/main/hurricane/base/NetConnector.cpp
 	src/main/hurricane/base/NetListener.cpp
 	src/main/hurricane/base/OutputCollector.cpp
 	src/main/hurricane/base/TopologyLoader.cpp
 	src/main/hurricane/base/Value.cpp
 	src/main/hurricane/base/Values.cpp
+	src/main/hurricane/base/Variant.cpp
 	src/main/hurricane/message/Command.cpp
 	src/main/hurricane/message/CommandDispatcher.cpp
 	src/main/hurricane/message/MessageLoop.cpp
 	src/main/hurricane/message/SupervisorCommander.cpp
 	src/main/hurricane/spout/SpoutExecutor.cpp
 	src/main/hurricane/spout/SpoutOutputCollector.cpp
+
 )
+
+# 核心，负责管理整个集群
+add_executable(nimbus src/main/hurricane/NimbusLauncher.cpp ${COMMON_SRC})
 target_link_libraries(nimbus meshy)
+
+# 每个计算节点一个负责与Nimbus通信，并调度本机上执行的任务
+add_executable(supervisor src/main/hurricane/SupervisorLauncher.cpp ${COMMON_SRC})
+target_link_libraries(supervisor meshy)

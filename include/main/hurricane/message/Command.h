@@ -27,15 +27,17 @@ namespace hurricane {
 
 			Command() : m_type(Type::Invalid) {}
 			Command(Type::Values type, base::Variants const& args) : m_type(type), m_args(args) {}
+			Command(base::DataPackage const& dataPackage);
 
 			Type::Values type()const { return m_type; }
 			base::Variants const& args()const { return m_args; }
-			std::shared_ptr<meshy::TcpConnection> src()const { return m_src; }
+			meshy::IStream* src()const { return m_src; }
+			void src(meshy::IStream* s) { m_src = s; }
 
 		private:
-			Type::Values							m_type;
-			base::Variants							m_args;
-			std::shared_ptr<meshy::TcpConnection>	m_src;
+			Type::Values	m_type;
+			base::Variants	m_args;
+			meshy::IStream*	m_src;
 		};
 	}
 }

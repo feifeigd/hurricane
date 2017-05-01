@@ -28,7 +28,8 @@ add_executable(nimbus src/main/hurricane/SupervisorLauncher.cpp
 	include/main/hurricane/base/NetConnector.h
 	include/main/hurricane/base/NetListener.h
 	include/main/hurricane/base/Executor.hpp	
-	include/main/hurricane/base/OutputCollector.h	
+	include/main/hurricane/base/OutputCollector.h
+	include/main/hurricane/base/TopologyLoader.h
 	include/main/hurricane/base/Value.h	
 	include/main/hurricane/base/Values.h
 	include/main/hurricane/message/Message.h
@@ -39,6 +40,7 @@ add_executable(nimbus src/main/hurricane/SupervisorLauncher.cpp
 	src/main/hurricane/base/NetConnector.cpp
 	src/main/hurricane/base/NetListener.cpp
 	src/main/hurricane/base/OutputCollector.cpp
+	src/main/hurricane/base/TopologyLoader.cpp
 	src/main/hurricane/base/Value.cpp
 	src/main/hurricane/base/Values.cpp
 	src/main/hurricane/spout/SpoutExecutor.cpp

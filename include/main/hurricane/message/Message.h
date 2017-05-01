@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 namespace hurricane {
 	namespace message {
 

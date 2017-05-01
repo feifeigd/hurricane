@@ -10,6 +10,7 @@ namespace hurricane {
 
 			void SendTuple(int taskIndex, base::Values const& values);
 
+			void RandomDestination();
 		};
 	}
 }

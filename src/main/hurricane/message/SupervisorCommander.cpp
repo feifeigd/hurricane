@@ -6,3 +6,7 @@ using hurricane::message::SupervisorCommander;
 void SupervisorCommander::SendTuple(int taskIndex, Values const& values) {
 
 }
+
+void SupervisorCommander::RandomDestination() {
+
+}

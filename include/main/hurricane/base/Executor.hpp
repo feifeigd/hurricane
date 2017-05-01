@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "../message/win32/MessageLoop.h"
+#include "../message/MessageLoop.h"
 #include <thread>
 
 namespace hurricane {
@@ -35,7 +35,7 @@ namespace hurricane {
 			virtual void OnCreate() = 0;
 			virtual void OnStop() = 0;
 			std::shared_ptr<TaskType>	m_task;
-			message::MessageLoop m_messageLoop;
+			message::MessageLoop		m_messageLoop;
 
 		private:
 			void StartThread() {
@@ -45,7 +45,7 @@ namespace hurricane {
 				OnStop();
 			}
 
-			Status	m_status;
+			Status		m_status;
 			std::string m_taskName;
 		};
 	}

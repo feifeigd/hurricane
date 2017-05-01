@@ -15,6 +15,7 @@ set(COMMON_FILES
 	include/http/HttpRequest.h
 	include/http/HttpResponse.h
 	include/http/HttpServer.h
+	include/IConnectable.h
 	include/loop.h
 	include/PackageDataSink.h
 	include/socket.h
@@ -55,10 +56,12 @@ if(UNIX)
 	)
 else()
 	set(PLATFORM_SRC	
+		include/iocp/IocpClient.h
 		include/iocp/IocpServer.h
 		include/iocp/IocpStream.h
 		src/iocp/Iocp.cpp
 		src/iocp/IocpLoop.cpp
+		src/iocp/IocpClient.cpp
 		src/iocp/IocpServer.cpp
 		src/iocp/IocpStream.cpp
 		src/iocp/WSAConnection.cpp

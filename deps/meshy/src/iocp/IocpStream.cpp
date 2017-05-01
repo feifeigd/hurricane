@@ -10,7 +10,7 @@ using meshy::IocpStream;
 using meshy::NativeSocket;
 using meshy::NativeSocketAddress;
 
-IocpStream::IocpStream(NativeSocket socket, NativeSocketAddress const& address) : BasicStream(socket), m_clientAddress(address)
+IocpStream::IocpStream(NativeSocket socket, NativeSocketAddress const& address) : BasicStream(socket, address)
 {
 
 }

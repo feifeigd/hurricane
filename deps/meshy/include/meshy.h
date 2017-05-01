@@ -9,6 +9,7 @@
 #include "epoll/EpollServer.h"
 #include "epoll/EpollClient.h"
 #elif defined(OS_WIN32)
+#include "iocp/IocpClient.h"
 #include "iocp/IocpServer.h"
 #endif
 
@@ -23,7 +24,7 @@ namespace meshy{
 #elif defined(OS_WIN32)
 	typedef IocpServer		TcpServer;
 	typedef WSAConnection	TcpConnection;
-	//typedef IocpClient		TcpClient;
+	typedef IocpClient		TcpClient;
 	typedef IocpStream		TcpStream;
 #endif	
 }

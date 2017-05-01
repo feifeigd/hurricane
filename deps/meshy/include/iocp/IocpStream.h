@@ -9,7 +9,7 @@ namespace meshy {
 	class IocpStream : public BasicStream{
 		IocpStream(IocpStream const&) = delete;
 	public:
-		IocpStream(NativeSocket socket, NativeSocketAddress const& address);
+		IocpStream(NativeSocket socket, NativeSocketAddress const& address = { 0 });
 
 		virtual size_t receive(char* buffer, size_t bufferSize, size_t& readSize)override;
 		virtual size_t send(ByteArray const& byteArray)override;
@@ -19,7 +19,6 @@ namespace meshy {
 
 	private:
 		Iocp::OperationDataPtr	m_operatinData;
-		NativeSocketAddress		m_clientAddress;
 	};
 
 	typedef std::shared_ptr<IocpStream> IocpStreamPtr;

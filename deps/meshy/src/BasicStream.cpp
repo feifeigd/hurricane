@@ -2,11 +2,12 @@
 
 using meshy::BasicStream;
 using meshy::NativeSocket;
+using meshy::NativeSocketAddress;
 using meshy::Socket;
 using meshy::DataSink;
 
-BasicStream::BasicStream(NativeSocket nativeSocket)
-	: Socket(nativeSocket), m_dataSink(nullptr)
+BasicStream::BasicStream(NativeSocket nativeSocket, NativeSocketAddress const& address)
+	: Socket(nativeSocket, address), m_dataSink(nullptr)
 {
 
 }

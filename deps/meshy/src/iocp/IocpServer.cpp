@@ -33,7 +33,7 @@ int32_t IocpServer::listen(std::string const& host, uint16_t port, int backlog) 
 WSAConnectionPtr IocpServer::accept() {
 	NativeSocketAddress saRemote;
 	int remoteLen = sizeof(saRemote);
-	NativeSocket acceptSocket = ::accept(GetNativeSocket(), (SOCKADDR*)&saRemote, &remoteLen);
+	NativeSocket acceptSocket = ::accept(GetNativeSocket(), (sockaddr*)&saRemote, &remoteLen);
 	if (SOCKET_ERROR == acceptSocket)
 	{
 		TRACE_ERROR("Accept Socket Error: " + GetLastError());

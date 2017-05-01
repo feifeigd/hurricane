@@ -7,6 +7,7 @@
 
 #ifdef OS_LINUX
 #include "epoll/EpollServer.h"
+#include "epoll/EpollClient.h"
 #elif defined(OS_WIN32)
 #include "iocp/IocpServer.h"
 #endif

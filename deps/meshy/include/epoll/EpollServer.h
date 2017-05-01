@@ -9,7 +9,7 @@ namespace meshy{
 	public:
 		EpollServer(DataSink* dataSink = nullptr);
 
-		virtual int32_t listen(std::string const& host, uint16_t port, int backlog)override;
+		virtual int32_t listen(std::string const& host, uint16_t port, int backlog = 20)override;
 	
 		EpollConnectionPtr accept();
 	};	

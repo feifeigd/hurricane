@@ -25,6 +25,7 @@ target_link_libraries(hurricane meshy)
 
 set(COMMON_SRC 
 	include/main/hurricane/base/DataPackage.h
+	include/main/hurricane/base/IntWritable.h
 	include/main/hurricane/base/NetAddress.h
 	include/main/hurricane/base/NetConnector.h
 	include/main/hurricane/base/NetListener.h

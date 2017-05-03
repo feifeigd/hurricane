@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include <vector>
 
 namespace hurricane {
@@ -14,7 +15,18 @@ namespace hurricane {
 				String,
 			};
 
+			static std::map<Type, int8_t> TypeCodes;
 			Variant() : m_type(Type::Invalid) {}
+			Variant(int32_t intValue) :m_type(Type::Integer), m_intValue(intValue){}
+			Variant(std::string const& value) : m_type(Type::String), m_stringValue(value){}
+
+			Variant(Variant const& variant);
+			Variant const& operator=(Variant const& variant);
+
+			Type type()const { return m_type; }
+
+			int32_t GetIntValue()const;
+			void SetIntValue(int32_t value);
 
 			std::string const& GetStringValue()const;
 

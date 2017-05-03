@@ -4,6 +4,8 @@
 
 #include "IoLoop.h"
 #include "ByteArray.h"
+#include "ByteArrayReader.h"
+#include "ByteArrayWriter.h"
 
 #ifdef OS_LINUX
 #include "epoll/EpollServer.h"

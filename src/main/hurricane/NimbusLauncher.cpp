@@ -30,6 +30,10 @@ std::map<std::string, NetAddress> const SUPERVISOR_ADDRESSES{
 
 typedef std::vector<std::string> Tasks;
 
+size_t const EXECUTOR_CAPACITY = 3;
+size_t const DEFAULT_SPOUT_EXECUTOR_COUNT = 1;
+size_t const DEFAULT_BOLT_EXECUTOR_COUNT = 1;
+
 int main() {
 	std::cout << "Nimbus started." << std::endl;
 
@@ -47,8 +51,24 @@ int main() {
 	std::map<std::pair<std::string, std::string>, std::pair<Node, int> > fieldDestinations;
 
 	CommandDispatcher dispatcher;
-	dispatcher.OnCommand(Command::Type::Join, [](hurricane::base::Variants args, meshy::IStream* src) {
-		std::string supervisorName = args[0].GetStringValue();
+	dispatcher.OnCommand(Command::Type::Join, [&](hurricane::base::Variants args, meshy::IStream* src) {
+		std::string const& supervisorName = args[0].GetStringValue();
+		
+		Node supervisor(supervisorName, SUPERVISOR_ADDRESSES.at(supervisorName));
+		supervisor.status(Node::Status::Alived);
+		supervisors[supervisorName] = supervisor;
+
+		spoutTasks[supervisorName] = Tasks(EXECUTOR_CAPACITY);
+		boltTasks[supervisorName] = Tasks(EXECUTOR_CAPACITY);
+
+		Command command(Command::Type::Response, {std::string("nimbus")});
+		ByteArray commandBytes = command.ToDataPackage().serialize();
+		src->send(commandBytes);
+
+		if (SUPERVISOR_ADDRESSES.size() == supervisors.size()) {
+			std::cout << "All Supervisor started." << std::endl;
+
+		}
 	});
 
 	NetListener netListener(NIMBUS_ADDRESS);

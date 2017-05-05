@@ -3,6 +3,7 @@
 #include <hurricane/base/Value.h>
 
 using hurricane::base::Value;
+using hurricane::base::Variant;
 using hurricane::base::TypeMismatchException;
 
 Value::Value(bool value) : m_type(Type::Boolean) {
@@ -84,4 +85,31 @@ double Value::ToDouble()const {
 std::string const& Value::ToString()const {
 	if (Type::String != m_type)throw TypeMismatchException("The type of value is not string.");
 	return m_stringValue;
+}
+
+Variant Value::ToVariant()const {
+	switch (m_type)
+	{
+	case hurricane::base::Value::Type::Boolean:
+		return m_value.booleanValue;
+	case hurricane::base::Value::Type::Character:
+		return m_value.characterValue;
+	case hurricane::base::Value::Type::Int8:
+		return m_value.int8Value;
+	case hurricane::base::Value::Type::Int16:
+		return m_value.int16Value;
+	case hurricane::base::Value::Type::Int32:
+		return m_value.int32Value;
+	//case hurricane::base::Value::Type::Int64:
+	//	return { m_value.int64Value };
+	//case hurricane::base::Value::Type::Float:
+	//	return { m_value.floatValue };
+	//case hurricane::base::Value::Type::Double:
+	//	return { m_value.doubleValue };
+	case hurricane::base::Value::Type::String:
+		return m_stringValue;
+	default:
+		return {};
+		break;
+	}
 }

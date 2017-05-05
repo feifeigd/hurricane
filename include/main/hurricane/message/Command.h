@@ -32,6 +32,8 @@ namespace hurricane {
 			base::DataPackage ToDataPackage()const;
 
 			Type::Values type()const { return m_type; }
+			base::Variant& arg(size_t index) { return m_args[index]; }
+			base::Variant const& arg(size_t index)const { return m_args[index]; }
 			base::Variants const& args()const { return m_args; }
 			meshy::IStream* src()const { return m_src; }
 			void src(meshy::IStream* s) { m_src = s; }

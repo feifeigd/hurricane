@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Variant.h"
 #include <string>
 
 namespace hurricane {
@@ -51,6 +52,7 @@ namespace hurricane {
 			double ToDouble()const;
 			std::string const& ToString()const;
 
+			Variant ToVariant()const;
 		private:
 			Type		m_type;
 			InnerValue	m_value;

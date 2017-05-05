@@ -17,7 +17,7 @@ using hurricane::base::NetAddress;
 using hurricane::base::Node;
 using hurricane::message::Command;
 using hurricane::message::CommandDispatcher;
-
+//using hurricane::topology::ITopology;
 using meshy::ByteArray;
 
 // 核心
@@ -33,6 +33,12 @@ typedef std::vector<std::string> Tasks;
 size_t const EXECUTOR_CAPACITY = 3;
 size_t const DEFAULT_SPOUT_EXECUTOR_COUNT = 1;
 size_t const DEFAULT_BOLT_EXECUTOR_COUNT = 1;
+
+/*static void dispatchTasks(std::map<std::string, Node>& supervisors
+	, std::map<std::string, Tasks>& spoutTasks, std::map<std::string, Tasks>& boltTasks
+	, ITopology* topology) {
+
+}*/
 
 int main() {
 	std::cout << "Nimbus started." << std::endl;
@@ -67,8 +73,14 @@ int main() {
 
 		if (SUPERVISOR_ADDRESSES.size() == supervisors.size()) {
 			std::cout << "All Supervisor started." << std::endl;
-
+			//dispatcherTasks(supervisors, spoutTasks, boltTasks, topology);
 		}
+	}).OnCommand(Command::Type::Alive, [&](hurricane::base::Variants args, meshy::IStream* src) {
+		std::string const& supervisorName = args[0].GetStringValue();
+		supervisors[supervisorName].alive();
+		Command command(Command::Type::Response, { std::string("president") });
+		ByteArray commandBytes = command.ToDataPackage().serialize();
+		src->send(commandBytes);
 	});
 
 	NetListener netListener(NIMBUS_ADDRESS);

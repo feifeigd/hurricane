@@ -11,5 +11,6 @@ Command::Command(DataPackage const& dataPackage) {
 DataPackage Command::ToDataPackage()const {
 	DataPackage dataPackage;
 	dataPackage.AddVariant(int(m_type));
+	for (auto const& arg : m_args)dataPackage.AddVariant(arg);
 	return dataPackage;
 }

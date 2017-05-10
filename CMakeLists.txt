@@ -60,10 +60,17 @@ set(COMMON_SRC
 
 )
 
+if(UNIX)
+	set(LIBS meshy pthread dl)
+else()
+	set(LIBS meshy)
+endif()
+
 # 核心，负责管理整个集群
 add_executable(nimbus src/main/hurricane/NimbusLauncher.cpp ${COMMON_SRC})
-target_link_libraries(nimbus meshy)
+target_link_libraries(nimbus ${LIBS})
 
 # 每个计算节点一个负责与Nimbus通信，并调度本机上执行的任务
 add_executable(supervisor src/main/hurricane/SupervisorLauncher.cpp ${COMMON_SRC})
-target_link_libraries(supervisor meshy)
+target_link_libraries(supervisor ${LIBS})
+

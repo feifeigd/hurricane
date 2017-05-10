@@ -1,6 +1,8 @@
 
 #ifdef OS_WIN32
 #include <Windows.h>
+#else
+#include <dlfcn.h>
 #endif // OS_WIN32
 
 #include <string>
@@ -27,7 +29,7 @@ namespace hurricane {
 				printf("Open Error:%s.\n", dlerror());
 				return nullptr;
 			}
-			TopologyGetter GetTopology = dlsym(libm_handle, "GetTopology");
+			TopologyGetter GetTopology = (TopologyGetter)dlsym(libm_handle, "GetTopology");
 			char* errorInfo = dlerror();
 			if (errorInfo) {
 				printf("Dlsym Error:%s.\n", errorInfo);

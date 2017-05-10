@@ -7,6 +7,7 @@
 #include <sys/epoll.h>
 #include <arpa/inet.h>
 #include <cstdint>
+#include <dlfcn.h>
 
 namespace meshy{
 	typedef int32_t NativeSocket;

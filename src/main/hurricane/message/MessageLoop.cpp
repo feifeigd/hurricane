@@ -20,7 +20,7 @@ MessageLoop::MessageLoop() : m_threadId(
 { }
 
 void MessageLoop::run() {
-#ifndef OS_WIN32
+#ifdef OS_WIN32
 	MSG msg;
 	while (GetMessage(&msg, 0, 0, 0)) {
 		std::cout << "Recived Message" << std::endl;
@@ -35,7 +35,8 @@ void MessageLoop::run() {
 			break;
 		}
 	}
-#endif // OS_WIN32
+#else
+	/*
 	MSG msg;
 	while (GetMessage(&msg, 0, 0, 0)) {
 		std::cout << "Recived Message" << std::endl;
@@ -52,6 +53,9 @@ void MessageLoop::run() {
 			break;
 		}
 	}
+	*/
+
+#endif // OS_WIN32
 }
 
 void MessageLoop::post(Message* message) {

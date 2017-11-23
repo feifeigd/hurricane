@@ -8,7 +8,7 @@ namespace meshy{
 	class EpollStream : public BasicStream{
 		EpollStream(EpollStream const&) = delete;
 	public:
-		EpollStream(NativeSocket socket);
+		EpollStream(NativeSocket socket, NativeSocketAddress const& address = { 0 });
 
 		virtual size_t receive(char* buffer, size_t bufferSize, size_t& readSize)override;
 		virtual size_t send(ByteArray const& byteArray)override;

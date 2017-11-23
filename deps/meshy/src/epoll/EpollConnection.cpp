@@ -3,8 +3,8 @@
 
 using meshy::EpollConnection;
 
-EpollConnection::EpollConnection(NativeSocket socket)
-	: EpollStream(socket)
+EpollConnection::EpollConnection(NativeSocket socket, NativeSocketAddress const& address)
+	: EpollStream(socket, address)
 {
 
 }

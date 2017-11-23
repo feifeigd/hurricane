@@ -7,8 +7,8 @@
 
 using meshy::EpollStream;
 
-EpollStream::EpollStream(NativeSocket socket)
-	: BasicStream(socket)
+EpollStream::EpollStream(NativeSocket socket, NativeSocketAddress const& address)
+	: BasicStream(socket, address)
 {
 
 }

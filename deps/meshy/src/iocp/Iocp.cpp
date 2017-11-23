@@ -18,20 +18,21 @@ HANDLE Iocp::CreateCompletionPort() {
 }
 
 Iocp::OperationData& Iocp::CreateOperationData(IocpStreamPtr stream, HANDLE completionPort) {
-	Iocp::OperationData* perIoData = &stream->GetOperationReadData();
+	Iocp::OperationData& perIoData = stream->GetOperationReadData();
 
-	IocpLoop::get().enqueue(perIoData->stream, perIoData->databuff.buf, perIoData->overlapped.InternalHigh);
+	IocpLoop::get().enqueue(perIoData.stream, perIoData.databuff.buf, perIoData.overlapped.InternalHigh);
 
 	ResetOperationData(perIoData);
-	perIoData->operationType = Iocp::OperationType::Read;
+	perIoData.operationType = Iocp::OperationType::Read;
 	// 关联IOCP
-	CreateIoCompletionPort((HANDLE)stream->GetNativeSocket(), completionPort, stream->GetNativeSocket(), 0);
-	return *(perIoData);
+	NativeSocket socket = stream->GetNativeSocket();
+	CreateIoCompletionPort((HANDLE)socket, completionPort, socket, 0);
+	return perIoData;
 }
 
-void Iocp::ResetOperationData(OperationData* perIoData) {
-	ZeroMemory(&perIoData->overlapped, sizeof(OVERLAPPED));
-	perIoData->databuff.len = sizeof perIoData->buffer;
-	perIoData->databuff.buf = perIoData->buffer;
-	perIoData->operationType = 0;
+void Iocp::ResetOperationData(OperationData& perIoData) {
+	ZeroMemory(&perIoData.overlapped, sizeof(OVERLAPPED));
+	perIoData.databuff.len = sizeof perIoData.buffer;
+	perIoData.databuff.buf = perIoData.buffer;
+	perIoData.operationType = 0;
 }

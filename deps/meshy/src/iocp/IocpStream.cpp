@@ -12,7 +12,7 @@ using meshy::NativeSocketAddress;
 
 IocpStream::IocpStream(NativeSocket socket, NativeSocketAddress const& address) : BasicStream(socket, address)
 {
-	Iocp::ResetOperationData(&m_operatinReadData);
+	Iocp::ResetOperationData(m_operatinReadData);
 	m_operatinReadData.stream = this;
 }
 

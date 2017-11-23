@@ -17,8 +17,11 @@ namespace meshy {
 
 		virtual void OnDataIndication(DataIndicationHandler handler)override { m_dataHandler = handler; }
 		virtual void disconnect();
+		void SetConnected(bool connected){m_bIsConnected = connected;}
+		bool IsConnected()const{return m_bIsConnected;};
 	private:
+		bool					m_bIsConnected = false;
 		DataIndicationHandler	m_dataHandler;
-		DataSink*	m_dataSink;
+		DataSink*				m_dataSink = nullptr;
 	};
 }

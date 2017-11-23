@@ -16,7 +16,9 @@ namespace meshy {
 		ConcurrentQueue() {
 
 		}
-
+		~ConcurrentQueue() {
+			m_condition.notify_all();
+		}
 		void push(Type const& record) {
 			std::lock_guard<std::mutex> lock(m_mutex);
 			m_queue.push(record);
@@ -38,6 +40,7 @@ namespace meshy {
 			}
 
 			std::lock_guard<std::mutex> lock(m_mutex);
+			if (m_queue.empty())return false;
 			record = std::move(m_queue.front());
 			m_queue.pop();
 			return true;

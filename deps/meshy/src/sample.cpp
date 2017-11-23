@@ -26,7 +26,6 @@ int main(){
 
 	meshy::HttpServer server(&dataSink);
 	server.OnConnection([&](meshy::HttpConnection* connection) {
-		connection->connection()->SetDataSink(&dataSink);
 		connection->OnRequest([connection](HttpRequest const& request) {
 			cout << "Request arrived\n"
 				<< request.method() << "\n"

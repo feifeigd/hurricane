@@ -11,5 +11,6 @@ namespace meshy {
 		WindowsSocketInitializer();
 	public:
 		static void initialize();
+		~WindowsSocketInitializer();
 	};
 }

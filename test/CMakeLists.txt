@@ -1,1 +1,4 @@
-subdirs(EchoServer)
+subdirs(
+	EchoClient
+	EchoServer
+)

@@ -12,6 +12,7 @@ namespace meshy {
 		IocpClient(IocpClient const&) = delete;
 	public:
 		virtual void connect(std::string const& host, uint16_t port)override;
+		void reconnect();
 		static IocpClientPtr Connect(std::string const& host, uint16_t port);
 
 	private:

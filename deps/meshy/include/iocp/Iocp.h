@@ -35,6 +35,6 @@ namespace meshy {
 		/// 创建完成端口
 		static HANDLE CreateCompletionPort();
 		static OperationData& CreateOperationData(IocpStreamPtr stream, HANDLE completionPort);
-		static void ResetOperationData(OperationData* perIoData);
+		static void ResetOperationData(OperationData& perIoData);
 	};
 }

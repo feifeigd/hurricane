@@ -22,5 +22,5 @@ DataSink* BasicStream::GetDataSink() {
 
 void meshy::BasicStream::disconnect()
 {
-
+	m_bIsConnected = false;
 }

@@ -63,8 +63,9 @@ IocpServer::ConnectionType IocpServer::accept(NativeSocket fd) {
 	}
 	
 	connection->SetDataSink(GetDataSink());	// 继承服务器的DataSink
-	if (m_connectHandler)m_connectHandler(connection.get());
-	
+	if (m_connectHandler)
+		m_connectHandler(connection.get());
+	connection->SetConnected(true);
 	TRACE_DEBUG("Accept socket socket=%d", fd);
 	Iocp::OperationData* perIoData = &Iocp::CreateOperationData(connection, m_completionPort);
 	
@@ -82,14 +83,9 @@ void IocpServer::SetCompletionPort(HANDLE completionPort) {
 
 void meshy::IocpServer::PostAccept()
 {
-	NativeSocket acceptfd = socket(AF_INET, SOCK_STREAM, 0);
-	if (acceptfd < 0)
-	{
-		TRACE_ERROR("Create socket failed!");
-		exit(1);
-	}
+	NativeSocket acceptfd = Socket::CreateNativeSocket();
 	int32_t option = 1;
-	//setsockopt(acceptfd, SOL_SOCKET, SO_REUSEADDR, (char*)&option, sizeof(option));
+	setsockopt(acceptfd, SOL_SOCKET, SO_REUSEADDR, (char*)&option, sizeof(option));
 
 	DWORD addressLength = sizeof(NativeSocketAddress) + 16;
 	//AcceptEx
@@ -115,5 +111,5 @@ void meshy::IocpServer::PostAccept()
 	assert(!find(acceptfd));
 	insert(acceptfd, connection);
 	assert(find(acceptfd));
-	TRACE_INFO("To Accept:perIoData=%p, socket=%u,ptr=%p", &operationReadData, connection->GetNativeSocket(), connection.get());
+	TRACE_INFO("To Accept: socket=%u", connection->GetNativeSocket());
 }

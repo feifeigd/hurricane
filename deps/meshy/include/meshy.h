@@ -19,15 +19,16 @@
 
 namespace meshy{
 #ifdef OS_LINUX
-	typedef EpollServer		TcpServer;
-	typedef EpollConnection	TcpConnection;
-	typedef EpollClient		TcpClient;
-	typedef EpollStream		TcpStream;
+	typedef EpollServer					TcpServer;
+	typedef EpollConnection				TcpConnection;
+	typedef EpollClient					TcpClient;
+	typedef EpollStream					TcpStream;
 #elif defined(OS_WIN32)
-	typedef IocpServer		TcpServer;
-	typedef WSAConnection	TcpConnection;
-	typedef IocpClient		TcpClient;
-	typedef IocpStream		TcpStream;
+	typedef IocpServer					TcpServer;
+	typedef WSAConnection				TcpConnection;
+	typedef IocpClient					TcpClient;
+	typedef IocpStream					TcpStream;
 #endif	
+	typedef std::shared_ptr<TcpClient>	TcpClientPtr;
 }
 

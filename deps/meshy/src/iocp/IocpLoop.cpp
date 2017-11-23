@@ -17,14 +17,6 @@ using meshy::IocpStream;
 LPFN_ACCEPTEX               IocpLoop::lpAcceptEx;	///< 函数指针
 LPFN_GETACCEPTEXSOCKADDRS	IocpLoop::lpGetAcceptExSockaddrs;
 
-SOCKET CreateSocket() {
-	SOCKET nSocket = WSASocketW(AF_INET, SOCK_STREAM, IPPROTO_IP, NULL, 0, WSA_FLAG_OVERLAPPED);
-	if (INVALID_SOCKET == nSocket) {
-		//cout << "WSASocket() failed: " << WSAGetLastError() << endl;
-	}
-	return nSocket;
-}
-
 IocpLoop& IocpLoop::get() {
 	static IocpLoop iocpLoop;
 	return iocpLoop;
@@ -40,7 +32,7 @@ void IocpLoop::AddServer(IocpServer* server) {
 }
 
 bool IocpLoop::init() {
-	SOCKET nSocket = CreateSocket();
+	SOCKET nSocket = Socket::CreateNativeSocket();
 	if (INVALID_SOCKET == nSocket) {
 		return false;
 	}
@@ -93,7 +85,7 @@ void IocpLoop::run() {
 	
 	// 工作线程
 	size_t threadCont = m_systemInfo.dwNumberOfProcessors * 2;
-	threadCont = 1;
+	//threadCont = 1;
 	for (size_t i = 0; i < threadCont; ++i) {
 		auto workerFunc = std::bind(&IocpLoop::WorkThread, this);
 		std::thread workerThread(workerFunc);
@@ -122,7 +114,7 @@ void IocpLoop::IocpThread() {
 			std::unique_lock<std::mutex> lock(m_serverMutex);
 			m_servers.insert({ listenfd , server });
 		}
-		for (int i = 0; i < 1; ++i)	// 每个服务器创建5个等待
+		for (int i = 0; i < 5; ++i)	// 每个服务器创建5个等待
 		{
 			server->PostAccept();
 		}
@@ -138,7 +130,7 @@ void IocpLoop::WorkThread() {
 		BOOL result = GetQueuedCompletionStatus(m_completionPort, &bytesReceived, &key, &lpOverlapped, INFINITE);
 		if (!result)
 		{
-			TRACE_ERROR("GetQueuedCompletionStatus Error: " + GetLastError());
+			TRACE_ERROR("GetQueuedCompletionStatus Error: %d", GetLastError());
 			
 			if (lpOverlapped)
 			{
@@ -152,7 +144,7 @@ void IocpLoop::WorkThread() {
 		}
 		Iocp::OperationData* perIoData = (Iocp::OperationData*)CONTAINING_RECORD(lpOverlapped, Iocp::OperationData, overlapped);
 
-		TRACE_DEBUG("perIoData=%p,stream=%p,socket=%u, key=%u", perIoData, perIoData->stream, perIoData->stream->GetNativeSocket(), key);
+		//TRACE_DEBUG("perIoData=%p,stream=%p,socket=%u, key=%u", perIoData, perIoData->stream, perIoData->stream->GetNativeSocket(), key);
 		switch (perIoData->operationType)
 		{
 		case Iocp::OperationType::Accept:
@@ -175,11 +167,12 @@ void IocpLoop::WorkThread() {
 		case Iocp::OperationType::Read:
 		{
 			IocpStream* stream = perIoData->stream;
-			TRACE_DEBUG("Read:stream socket=%u, key=%u", stream->GetNativeSocket(), key);
-			//assert(stream && stream->GetNativeSocket() == key);
+			assert(stream && stream->GetNativeSocket() == key);
 			assert(perIoData == &stream->GetOperationReadData());
 			if (stream->GetNativeSocket() != key)
 			{
+				TRACE_ERROR("%s: socket=%u, key=%u", __FUNCTION__, stream->GetNativeSocket(), key);
+				stream->disconnect();
 				continue;
 			}
 			if (!bytesReceived)	// 网络断开了
@@ -189,7 +182,7 @@ void IocpLoop::WorkThread() {
 			}
 			perIoData->databuff.buf[bytesReceived] = 0;
 			enqueue(stream, perIoData->databuff.buf, bytesReceived);
-			Iocp::ResetOperationData(perIoData);
+			Iocp::ResetOperationData(*perIoData);
 			perIoData->operationType = Iocp::OperationType::Read;
 			DWORD recvBytes = 0;
 			DWORD flags = 0;
@@ -204,7 +197,7 @@ void IocpLoop::WorkThread() {
 }
 
 void IocpLoop::enqueue(IocpStream* stream, char const* buf, size_t nread) {
-	
+	TRACE_DEBUG("%s: receive %u Bytes.", __FUNCTION__, stream->GetNativeSocket(), nread);
 	if (stream->GetDataSink())
 	{
 		stream->GetDataSink()->OnDataIndication(stream, buf, nread);

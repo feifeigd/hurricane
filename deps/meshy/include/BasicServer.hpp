@@ -27,12 +27,7 @@ namespace meshy {
 
 	protected:
 		int32_t bind(std::string const& host, uint16_t port) {
-			NativeSocket listenfd = socket(AF_INET, SOCK_STREAM, 0);
-			if (listenfd < 0)
-			{
-				TRACE_ERROR("Create socket failed!");
-				exit(1);
-			}
+			NativeSocket listenfd = Socket::CreateNativeSocket();
 			int32_t option = 1;
 			setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, (char*)&option, sizeof(option));
 			NativeSocketAddress srvAddr = {0};

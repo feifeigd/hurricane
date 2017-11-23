@@ -56,6 +56,7 @@ if(UNIX)
 	)
 else()
 	set(PLATFORM_SRC	
+		include/iocp/IocpLoop.h
 		include/iocp/IocpClient.h
 		include/iocp/IocpServer.h
 		include/iocp/IocpStream.h

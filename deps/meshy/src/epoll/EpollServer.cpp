@@ -42,8 +42,9 @@ EpollConnectionPtr EpollServer::accept(){
 			TRACE_ERROR("epoll_ctl: add");
 			exit(EXIT_FAILURE);
 		}
-		EpollConnectionPtr connection = std::make_shared<EpollConnection>(conn_sock);
+		EpollConnectionPtr connection = std::make_shared<EpollConnection>(conn_sock, remote);
 		if(m_connectHandler)m_connectHandler(connection.get());
+		connection->SetConnected(true);
 		return connection;
 	}
 	if(-1 == conn_sock){

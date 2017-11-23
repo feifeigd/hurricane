@@ -78,5 +78,7 @@ target_link_libraries(net_framework meshy)
 
 if(UNIX)
 	target_link_libraries(net_framework pthread)
+else()
+	target_link_libraries(net_framework Mswsock.lib)	
 endif()
 

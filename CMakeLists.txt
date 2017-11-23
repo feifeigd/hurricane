@@ -63,7 +63,7 @@ set(COMMON_SRC
 if(UNIX)
 	set(LIBS meshy pthread dl)
 else()
-	set(LIBS meshy)
+	set(LIBS meshy Mswsock.lib)
 endif()
 
 # 核心，负责管理整个集群
@@ -74,3 +74,4 @@ target_link_libraries(nimbus ${LIBS})
 add_executable(supervisor src/main/hurricane/SupervisorLauncher.cpp ${COMMON_SRC})
 target_link_libraries(supervisor ${LIBS})
 
+add_subdirectory(test)

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "../win32/net_win32.h"
 #include <memory>
@@ -12,7 +12,7 @@ namespace meshy {
 	{
 	public:
 		enum {
-			DataBuffSize = BUFSIZ,
+			DataBuffSize = 8*1024,	// 8K
 		};
 
 		class OperationType {
@@ -20,6 +20,7 @@ namespace meshy {
 			enum {
 				Read,
 				Write,
+				Accept,
 			};
 		};
 		struct OperationData {
@@ -29,10 +30,11 @@ namespace meshy {
 			int			operationType;
 			IocpStream*	stream;
 		};
-		typedef std::shared_ptr<OperationData> OperationDataPtr;
+		//typedef std::shared_ptr<OperationData> OperationDataPtr;
 
-		static HANDLE GetCompletionPort();
-		static OperationDataPtr CreateOperationData(IocpStreamPtr stream, HANDLE completionPort);
+		/// 创建完成端口
+		static HANDLE CreateCompletionPort();
+		static OperationData& CreateOperationData(IocpStreamPtr stream, HANDLE completionPort);
 		static void ResetOperationData(OperationData* perIoData);
 	};
 }

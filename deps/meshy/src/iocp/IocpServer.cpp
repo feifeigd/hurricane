@@ -1,8 +1,9 @@
-#include <iocp/IocpLoop.h>
+﻿#include <iocp/IocpLoop.h>
 #include <iocp/IocpServer.h>
 #include <utils/logger.h>
 #include <cassert>
 #include <WS2tcpip.h>	// inet_pton
+#include <Mswsock.h>
 
 using meshy::DataSink;
 using meshy::IocpServer;
@@ -11,7 +12,7 @@ using meshy::WSAConnectionPtr;
 
 IocpServer::IocpServer(DataSink* dataSink) : BasicServer<WSAConnectionPtr>(dataSink), m_completionPort(nullptr)
 {
-	WindowsSocketInitializer::initialize();
+	IocpLoop::get();	// 初始化网络
 }
 
 
@@ -30,31 +31,89 @@ int32_t IocpServer::listen(std::string const& host, uint16_t port, int backlog) 
 	return 0;
 }
 
-WSAConnectionPtr IocpServer::accept() {
-	NativeSocketAddress saRemote;
-	int remoteLen = sizeof(saRemote);
-	NativeSocket acceptSocket = ::accept(GetNativeSocket(), (sockaddr*)&saRemote, &remoteLen);
-	if (SOCKET_ERROR == acceptSocket)
-	{
-		TRACE_ERROR("Accept Socket Error: " + GetLastError());
-		throw std::exception("Accept Socket Error: ");
+IocpServer::ConnectionType IocpServer::accept(NativeSocket fd) {
+	ConnectionType connection = find(fd);
+	
+	if (!connection) {
+		PostAccept();
+		return nullptr;
 	}
-	WSAConnectionPtr connection = std::make_shared<WSAConnection>(acceptSocket, saRemote);
-	connection->SetDataSink(GetDataSink());
-	if (m_connectHandler)m_connectHandler(connection.get());
-	char buf[250];
-	sprintf(buf, "Accept socket socket=%d", acceptSocket);
-	TRACE_DEBUG(buf);
-	Iocp::OperationDataPtr perIoData = Iocp::CreateOperationData(connection, m_completionPort);
-	connection->SetOperationData(perIoData);
+	Iocp::OperationData& opData = connection->GetOperationReadData();
+	if (opData.overlapped.InternalHigh <= 0)
+	{
+		remove(fd); // 断开了
+		PostAccept();
+		return nullptr;
+	}
+	DWORD sockaddrLength = sizeof(NativeSocketAddress);
+	DWORD addressLength = sockaddrLength + 16;
+	NativeSocketAddress *localSockaddr, *remoteSockaddr;
+	int locallen, remotelen; 
+	DWORD dataLen = sizeof(opData.buffer) - 2 * addressLength;
+	IocpLoop::lpGetAcceptExSockaddrs(opData.buffer, dataLen, addressLength, addressLength, (sockaddr**)&localSockaddr, &locallen, (sockaddr**)&remoteSockaddr, &remotelen);
+		
+	connection->SetNativeSocketAddress(*remoteSockaddr);
+	auto remoteIp = remoteSockaddr->sin_addr.s_addr;
 
+	TRACE_ERROR("新建连接socket=%u", connection->GetNativeSocket());
+	if (ChangeIpCount(remoteIp, true) >= MAX_IP_COUNT) {
+		remove(fd);
+		PostAccept();
+		return nullptr;
+	}
+	
+	connection->SetDataSink(GetDataSink());	// 继承服务器的DataSink
+	if (m_connectHandler)m_connectHandler(connection.get());
+	
+	TRACE_DEBUG("Accept socket socket=%d", fd);
+	Iocp::OperationData* perIoData = &Iocp::CreateOperationData(connection, m_completionPort);
+	
 	DWORD flags = 0;
 	DWORD recvBytes = 0;
-	WSARecv(acceptSocket, &perIoData->databuff, 1, &recvBytes, &flags, &perIoData->overlapped, nullptr);
+	WSARecv(fd, &perIoData->databuff, 1, &recvBytes, &flags, &perIoData->overlapped, nullptr);
 
+	PostAccept();
 	return connection;
 }
 
 void IocpServer::SetCompletionPort(HANDLE completionPort) {
 	m_completionPort = completionPort;
+}
+
+void meshy::IocpServer::PostAccept()
+{
+	NativeSocket acceptfd = socket(AF_INET, SOCK_STREAM, 0);
+	if (acceptfd < 0)
+	{
+		TRACE_ERROR("Create socket failed!");
+		exit(1);
+	}
+	int32_t option = 1;
+	//setsockopt(acceptfd, SOL_SOCKET, SO_REUSEADDR, (char*)&option, sizeof(option));
+
+	DWORD addressLength = sizeof(NativeSocketAddress) + 16;
+	//AcceptEx
+	DWORD dwBytes = 0;
+	IocpServer::ConnectionType connection = std::make_shared<WSAConnection>(this, acceptfd);
+	Iocp::OperationData& operationReadData = connection->GetOperationReadData();
+	
+	operationReadData.operationType = Iocp::OperationType::Accept;
+	NativeSocket listenfd = GetNativeSocket();
+	DWORD dataLen = sizeof(operationReadData.buffer) - 2 * addressLength;
+	BOOL r = IocpLoop::lpAcceptEx(listenfd, acceptfd, operationReadData.buffer, dataLen, addressLength, addressLength, &dwBytes, &operationReadData.overlapped);
+	if (!r)
+	{
+		int errorno = WSAGetLastError();
+		// https://msdn.microsoft.com/query/dev15.query?appId=Dev15IDEF1&l=ZH-CN&k=k(MSWSOCK%2FAcceptEx);k(AcceptEx);k(DevLang-C%2B%2B);k(TargetOS-Windows)&rd=true
+		// 文档说ERROR_IO_PENDING是成功的
+		// If WSAGetLastError returns ERROR_IO_PENDING, then the operation was successfully initiated and is still in progress.
+		if (ERROR_IO_PENDING != errorno) {
+			TRACE_ERROR("AcceptEx failed with error: %u", WSAGetLastError());
+			return;
+		}
+	}
+	assert(!find(acceptfd));
+	insert(acceptfd, connection);
+	assert(find(acceptfd));
+	TRACE_INFO("To Accept:perIoData=%p, socket=%u,ptr=%p", &operationReadData, connection->GetNativeSocket(), connection.get());
 }

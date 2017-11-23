@@ -16,6 +16,7 @@ namespace meshy {
 		DataSink* GetDataSink();
 
 		virtual void OnDataIndication(DataIndicationHandler handler)override { m_dataHandler = handler; }
+		virtual void disconnect();
 	private:
 		DataIndicationHandler	m_dataHandler;
 		DataSink*	m_dataSink;

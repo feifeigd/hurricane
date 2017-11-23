@@ -19,3 +19,8 @@ void BasicStream::SetDataSink(DataSink* dataSink) {
 DataSink* BasicStream::GetDataSink() {
 	return m_dataSink;
 }
+
+void meshy::BasicStream::disconnect()
+{
+
+}

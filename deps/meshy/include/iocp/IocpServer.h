@@ -7,10 +7,12 @@ namespace meshy {
 	public:
 		IocpServer(DataSink* dataSink = nullptr);
 
-		virtual int32_t listen(std::string const& host, uint16_t port, int backlog = 20)override;
-		virtual WSAConnectionPtr accept()override;
+		virtual int32_t listen(std::string const& host, uint16_t port, int backlog = SOMAXCONN)override;
+		virtual ConnectionType accept(NativeSocket fd)override;
 
 		void SetCompletionPort(HANDLE completionPort);
+
+		void PostAccept();
 
 	private:
 		HANDLE m_completionPort;

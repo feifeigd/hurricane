@@ -14,11 +14,10 @@ namespace meshy {
 		virtual size_t receive(char* buffer, size_t bufferSize, size_t& readSize)override;
 		virtual size_t send(ByteArray const& byteArray)override;
 
-		void SetOperationData(Iocp::OperationDataPtr operationData);
-		Iocp::OperationDataPtr GetOperationData();
-
+		Iocp::OperationData& GetOperationReadData() { return m_operatinReadData; };
+		
 	private:
-		Iocp::OperationDataPtr	m_operatinData;
+		Iocp::OperationData	m_operatinReadData;
 	};
 
 	typedef std::shared_ptr<IocpStream> IocpStreamPtr;

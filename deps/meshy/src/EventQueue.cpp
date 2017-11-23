@@ -25,6 +25,7 @@ std::shared_ptr<BaseEvent> EventQueue::GetEvent() {
 	{
 		std::shared_ptr<BaseEvent> event = m_events.front();
 		m_events.erase(m_events.begin());
+		return event;
 	}
 	return nullptr;
 }

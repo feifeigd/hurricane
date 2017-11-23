@@ -1,12 +1,14 @@
-#pragma once
+﻿#pragma once
 
 #include "../loop.h"
 #include "../utils/concurrent_queue.h"
 #include "Iocp.h"
-#include "WSAConnection.h"
+//#include "WSAConnection.h"
 #include "../win32/net_win32.h"
 #include <string>
 #include <map>
+
+#include <thread>
 
 namespace meshy {
 
@@ -17,23 +19,33 @@ namespace meshy {
 		static IocpLoop& get();
 		void AddServer(IocpServer* server);
 
+		static LPFN_ACCEPTEX				lpAcceptEx;	///< 函数指针
+		static LPFN_GETACCEPTEXSOCKADDRS	lpGetAcceptExSockaddrs;
+
+		void enqueue(IocpStream* stream, char const* buf, size_t nread);
 	private:
 		IocpLoop();
+		~IocpLoop();
+
+		void stop();
 
 	protected:
 		virtual void run()override;
 
 	private:
+		bool init();
 		void IocpThread();
-		void IocpConnectionThread(IocpServer* server);
-		void WorkThread(NativeSocket listenfd, HANDLE completionPort);
-		void enqueue(IocpStreamPtr stream, char const* buf, size_t nread);
+		
+		void WorkThread();
 	private:
 		bool										m_shutdown;
 		SYSTEM_INFO									m_systemInfo;
 
 		ConcurrentQueue<IocpServer*>				m_serverQueue;
+
+		mutable std::mutex							m_serverMutex;
 		std::map<NativeSocket, IocpServer*>			m_servers;
-		std::map<NativeSocket, WSAConnectionPtr>	m_streams;
+		std::vector<std::thread>					m_thread_group;
+		HANDLE										m_completionPort;
 	};
 }

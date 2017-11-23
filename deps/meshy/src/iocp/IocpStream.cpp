@@ -12,11 +12,8 @@ using meshy::NativeSocketAddress;
 
 IocpStream::IocpStream(NativeSocket socket, NativeSocketAddress const& address) : BasicStream(socket, address)
 {
-
-}
-
-void IocpStream::SetOperationData(Iocp::OperationDataPtr operationData) {
-	m_operatinData = operationData;
+	Iocp::ResetOperationData(&m_operatinReadData);
+	m_operatinReadData.stream = this;
 }
 
 size_t IocpStream::receive(char* buffer, size_t bufferSize, size_t& readSize) {
@@ -39,14 +36,9 @@ size_t IocpStream::send(ByteArray const& byteArray) {
 			}
 			break;
 		}
-		char buf[256];
-		sprintf(buf, "%s:socket=%d, nwrite=%d", __FUNCTION__, fd, nwrite);
-		TRACE_DEBUG(buf);
+		
 		n -= nwrite;
 	}
+	TRACE_DEBUG("%s %u Bytes.", __FUNCTION__, data_size - n);
 	return data_size - n;
-}
-
-Iocp::OperationDataPtr IocpStream::GetOperationData() {
-	return m_operatinData;
 }

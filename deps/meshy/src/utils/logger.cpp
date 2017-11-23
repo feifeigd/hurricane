@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include <thread>
+#include <cstdarg>
 
 using meshy::Logger;
 using meshy::Priority;
@@ -15,6 +16,7 @@ namespace meshy {
 		"WARNING",
 		"ERROR",
 	};
+
 }
 
 Logger::Logger(Priority priority) : m_priority(priority), m_shutdown(false)
@@ -53,7 +55,17 @@ void Logger::InitializeFileStream() {
 	}
 }
 
-void Logger::WriteLog(Priority priority, std::string const& log) {
+void Logger::WriteLog(Priority priority, char const* fmt, ...)
+{
+	char log[4*1024];
+	va_list args;
+	va_start(args, fmt);
+	_vsnprintf(log, sizeof log, fmt, args);
+	va_end(args);
+	return _WriteLog(priority, log);
+}
+
+void Logger::_WriteLog(Priority priority, std::string const& log) {
 	if (priority < m_priority)return;
 	std::stringstream ss;
 	ss << HurricaneUtils::GetCurrentTimeStamp();

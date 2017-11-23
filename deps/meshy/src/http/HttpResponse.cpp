@@ -10,7 +10,7 @@ HttpResponse::HttpResponse()
 }
 
 std::string HttpResponse::ToStdString()const {
-	return GetResponseLine() + HttpContext::ToStdString();
+	return GetResponseLine() + "\r\n" + HttpContext::ToStdString();
 }
 
 size_t HttpResponse::GetStatusCode()const {

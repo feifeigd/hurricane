@@ -19,9 +19,10 @@ void HttpRequest::ParseStdStringList(StdStringList const& stringList) {
 
 void HttpRequest::ParseRequestLine(std::string const& requestLine) {
 	StdStringList words = SplitString(requestLine, ' ');
-	if (words.empty())return;
+	if (words.size() < 2 )return;
 	method(words[0]);
 	path(words[1]);
+	if (words.size() < 3)return;
 	version(words[2]);
 }
 

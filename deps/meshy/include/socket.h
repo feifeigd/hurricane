@@ -14,6 +14,7 @@
 #endif
 
 namespace meshy {
+	/// 原始socket的封装
 	class Socket {
 	public:
 		Socket(NativeSocket nativeSocket = 0, NativeSocketAddress const& address = {0});
@@ -21,7 +22,9 @@ namespace meshy {
 
 		NativeSocket GetNativeSocket()const;
 		NativeSocketAddress const& GetNativeSocketAddress()const;
-
+		void SetNativeSocketAddress(NativeSocketAddress const& address) {
+			m_nativeSocketAddress = address;
+		}
 	protected:
 		void SetNativeSocket(NativeSocket nativeSocket);
 		/// 对于监听socket，表示绑定的地址，其他则表示对方的地址

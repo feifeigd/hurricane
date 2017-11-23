@@ -1,4 +1,5 @@
-#include <socket.h>
+﻿#include <socket.h>
+#include <utils/logger.h>
 
 using meshy::Socket;
 using meshy::NativeSocket;
@@ -21,6 +22,8 @@ Socket::~Socket() {
 #else
 	close(m_nativeSocket);
 #endif // OS_WIN32
+
+	TRACE_ERROR("断开连接socket=%u", m_nativeSocket);
 }
 
 NativeSocket Socket::GetNativeSocket()const {

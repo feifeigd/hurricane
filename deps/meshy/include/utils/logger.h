@@ -24,7 +24,8 @@ namespace meshy {
 		static Logger& get();
 		void SetPriority(Priority priority);
 		Priority GetPriority()const;
-		void WriteLog(Priority priority, std::string const& log);
+		void _WriteLog(Priority priority, std::string const& log);
+		void __stdcall WriteLog(Priority priority, char const* fmt, ...);
 
 	private:
 		Logger(Priority priority);
@@ -37,10 +38,10 @@ namespace meshy {
 		Priority						m_priority;
 		bool							m_shutdown;
 	};
-
-#define TRACE_DEBUG(content)	meshy::Logger::get().WriteLog(Priority::DEBUG, content)
-#define TRACE_STATE(content)	meshy::Logger::get().WriteLog(Priority::STATE, content)
-#define TRACE_INFO(content)		meshy::Logger::get().WriteLog(Priority::INFO, content)
-#define TRACE_WARNING(content)	meshy::Logger::get().WriteLog(Priority::WARNING, content)
-#define TRACE_ERROR(content)	meshy::Logger::get().WriteLog(Priority::Error, content)
 }
+
+#define TRACE_DEBUG(...)	meshy::Logger::get().WriteLog(meshy::Priority::DEBUG, __VA_ARGS__)
+#define TRACE_STATE(...)	meshy::Logger::get().WriteLog(meshy::Priority::STATE, __VA_ARGS__)
+#define TRACE_INFO(...)		meshy::Logger::get().WriteLog(meshy::Priority::INFO, __VA_ARGS__)
+#define TRACE_WARNING(...)	meshy::Logger::get().WriteLog(meshy::Priority::WARNING, __VA_ARGS__)
+#define TRACE_ERROR(...)	meshy::Logger::get().WriteLog(meshy::Priority::Error, __VA_ARGS__)

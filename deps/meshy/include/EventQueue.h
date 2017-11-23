@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <mutex>
 #include <vector>
@@ -19,7 +19,7 @@ namespace meshy {
 	private:
 		std::vector<std::shared_ptr<BaseEvent> >	m_events;
 		std::condition_variable						m_waitCondition;
-		size_t										m_timeout;
+		size_t										m_timeout;	///< 等待毫秒
 		std::mutex									m_mutex;
 	};
 }

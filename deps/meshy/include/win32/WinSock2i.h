@@ -35,3 +35,5 @@
 #endif
 
 #endif//_WINSOCK2API_
+
+#include <MSWSock.h>

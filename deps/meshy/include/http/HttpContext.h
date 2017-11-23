@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <string>
 #include <vector>
@@ -25,7 +25,7 @@ public:
 
 	static HttpContext FromStdStringList(StdStringList const& stringList);
 protected:
-	std::string							m_version;
+	std::string							m_version;	///< HTTP的版本
 private:
 	std::map<std::string, std::string>	m_headers;
 	std::string							m_content;

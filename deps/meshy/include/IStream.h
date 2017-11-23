@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <functional>
 
@@ -11,6 +11,7 @@ namespace meshy {
 	public:
 		typedef std::function<void(char const* buf, size_t size)> DataIndicationHandler;
 
+		/// 返回处理了多少个字节
 		virtual size_t receive(char* buffer, size_t bufferSize, size_t& readSize) = 0;
 		virtual size_t send(ByteArray const& byteArray) = 0;
 

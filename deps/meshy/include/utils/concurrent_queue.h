@@ -36,6 +36,8 @@ namespace meshy {
 				std::lock_guard<std::mutex> lock(m_mutex);
 				if (m_queue.empty())return false;
 			}
+
+			std::lock_guard<std::mutex> lock(m_mutex);
 			record = std::move(m_queue.front());
 			m_queue.pop();
 			return true;
@@ -51,8 +53,8 @@ namespace meshy {
 			return m_queue.empty();
 		}
 	private:
-		std::queue<Type>	m_queue;
-		mutable std::mutex	m_mutex;
+		std::queue<Type>		m_queue;
+		mutable std::mutex		m_mutex;
 		std::condition_variable	m_condition;
 	};
 }

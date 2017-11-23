@@ -14,15 +14,16 @@ using meshy::PackageDataSink;
 PackageDataSink::PackageDataSink(EventQueue* eventQueue)
 	: m_eventQueue(eventQueue), m_totalSize(0)
 	, m_threadPool(10, [](BaseEvent& event) {
-	TRACE_DEBUG("Thread onEvent sink!");
-	std::string requestText = event.data().ToStdString();
-	HttpRequest request = HttpRequest::FromStdString(requestText);
-	HttpResponse response;
-	response.version("HTTP/1.1");
-	response.SetStatusCode(200);
-	response.content("Hello!Sink in thread!");
-	event.stream()->send(response.ToStdString());
-	TRACE_DEBUG("Thread onEvent sink end.");
+		TRACE_DEBUG("Thread onEvent sink!");
+		std::string requestText = event.data().ToStdString();
+		HttpRequest request = HttpRequest::FromStdString(requestText);
+		HttpResponse response;
+		response.version("HTTP/1.1");
+		response.SetStatusCode(200);
+		response.content("Hello!Sink in thread!");
+		event.stream()->send(response.ToStdString());
+		TRACE_DEBUG("Thread onEvent sink end.");
+		event.stream()->disconnect();
 	})
 {
 

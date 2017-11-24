@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include <cassert>
 #include <queue>
 #include <mutex>
 #include <condition_variable>
@@ -43,6 +44,27 @@ namespace meshy {
 			if (m_queue.empty())return false;
 			record = std::move(m_queue.front());
 			m_queue.pop();
+			return true;
+		}
+
+		bool pop_all(std::queue<Type>& records, bool isBlocked = true) {
+			if (isBlocked)
+			{
+				std::unique_lock<std::mutex> lock(m_mutex);
+				while (m_queue.empty())
+				{
+					m_condition.wait(lock);
+				}
+			}
+			else {
+				std::lock_guard<std::mutex> lock(m_mutex);
+				if (m_queue.empty())return false;
+			}
+
+			std::lock_guard<std::mutex> lock(m_mutex);
+			assert(records.empty());
+			if (m_queue.empty())return false;
+			std::swap(records, m_queue);
 			return true;
 		}
 

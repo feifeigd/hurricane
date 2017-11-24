@@ -27,6 +27,7 @@ void IocpLoop::AddServer(IocpServer* server) {
 	m_serverQueue.push(server);
 	if (m_shutdown) {
 		m_shutdown = false;
+		assert(m_thread_group.empty());
 		start();
 	}	
 }
@@ -198,7 +199,7 @@ void IocpLoop::WorkThread() {
 }
 
 void IocpLoop::enqueue(IocpStream* stream, char const* buf, size_t nread) {
-	TRACE_DEBUG("%s: receive %u Bytes.", __FUNCTION__, stream->GetNativeSocket(), nread);
+	TRACE_DEBUG("socket: %u receive %u Bytes by thread=%u.", stream->GetNativeSocket(), nread, std::this_thread::get_id());
 	
 	if (stream->GetDataSink())
 	{

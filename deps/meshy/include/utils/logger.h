@@ -35,6 +35,7 @@ namespace meshy {
 
 		ConcurrentQueue<std::string>	m_queue;
 		std::ofstream					m_fileStream;
+		std::thread						m_writeThread;
 		Priority						m_priority;
 		bool							m_shutdown;
 	};

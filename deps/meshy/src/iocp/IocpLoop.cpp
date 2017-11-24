@@ -90,12 +90,13 @@ void IocpLoop::run() {
 		auto workerFunc = std::bind(&IocpLoop::WorkThread, this);
 		std::thread workerThread(workerFunc);
 		workerThread.detach();
-		m_thread_group.push_back(std::thread(workerFunc));
+		m_thread_group.push_back(std::move(workerThread));
 	}
 
 	auto func = std::bind(&IocpLoop::IocpThread, this);
 	std::thread iocpThread(func);
 	iocpThread.detach();	// IO主线程
+	m_thread_group.push_back(std::move(iocpThread));
 }
 
 void IocpLoop::IocpThread() {
@@ -198,6 +199,7 @@ void IocpLoop::WorkThread() {
 
 void IocpLoop::enqueue(IocpStream* stream, char const* buf, size_t nread) {
 	TRACE_DEBUG("%s: receive %u Bytes.", __FUNCTION__, stream->GetNativeSocket(), nread);
+	
 	if (stream->GetDataSink())
 	{
 		stream->GetDataSink()->OnDataIndication(stream, buf, nread);
@@ -210,4 +212,26 @@ void meshy::IocpLoop::stop()
 	for (size_t i = 0; i < m_systemInfo.dwNumberOfProcessors * 2; ++i) {
 		PostQueuedCompletionStatus(m_completionPort, 0, 0, nullptr);
 	}
+	for (auto& th : m_thread_group) {
+		try
+		{
+			if (std::this_thread::get_id() == th.get_id())
+			{
+				TRACE_ERROR("Cannot join self thread.");
+				continue;
+			}
+			if(th.joinable())
+				th.join();
+		}
+		catch (std::system_error const& e)
+		{
+			TRACE_ERROR("%s:%s", __FUNCTION__, e.what());
+			continue;
+		}
+		catch (...)
+		{
+			continue;
+		}
+	}
+	m_thread_group.clear();
 }

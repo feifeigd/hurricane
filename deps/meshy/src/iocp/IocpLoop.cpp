@@ -98,6 +98,7 @@ void IocpLoop::run() {
 	std::thread iocpThread(func);
 	iocpThread.detach();	// IO主线程
 	m_thread_group.push_back(std::move(iocpThread));
+	TRACE_DEBUG("线程数=%u", m_thread_group.size());
 }
 
 void IocpLoop::IocpThread() {
@@ -132,11 +133,16 @@ void IocpLoop::WorkThread() {
 		BOOL result = GetQueuedCompletionStatus(m_completionPort, &bytesReceived, &key, &lpOverlapped, INFINITE);
 		if (!result)
 		{
-			TRACE_ERROR("GetQueuedCompletionStatus Error: %d", GetLastError());
-			
-			if (lpOverlapped)
+			TRACE_ERROR("GetQueuedCompletionStatus errno=%d,Error: %d", errno, WSAGetLastError());
+			if (ERROR_NETNAME_DELETED == GetLastError() && lpOverlapped)
 			{
-
+				Iocp::OperationData* perIoData = (Iocp::OperationData*)CONTAINING_RECORD(lpOverlapped, Iocp::OperationData, overlapped);
+				WSAConnection *connection = dynamic_cast<WSAConnection *>(perIoData->stream);
+				if (connection)
+				{
+					connection->server()->PostAccept();
+				}
+				perIoData->stream->disconnect();
 			}
 			continue;
 		}
@@ -161,8 +167,14 @@ void IocpLoop::WorkThread() {
 			if (server)
 			{
 				perIoData->databuff.buf[bytesReceived] = 0;
-				IocpServer::ConnectionType stream = server->accept(perIoData->stream->GetNativeSocket());				
+				char* buf = perIoData->databuff.buf;
+				IocpServer::ConnectionType stream = server->accept(perIoData->stream->GetNativeSocket());		
+				if(stream)
+					enqueue(stream.get(), buf, bytesReceived);
 				continue;
+			}
+			else {
+				assert(false && "找不到服务器");
 			}
 		}
 		break;

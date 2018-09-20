@@ -23,6 +23,7 @@ void SpoutExecutor::StopTask() {
 void SpoutExecutor::OnCreate() {
 	std::cout << "Start Spout Task" << std::endl;
 	m_needToStop = false;
+	// TODO
 	SpoutOutputCollector* outputCollector;
 	m_task->open(*outputCollector);
 

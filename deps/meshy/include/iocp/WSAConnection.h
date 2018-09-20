@@ -6,16 +6,20 @@
 namespace meshy {
 
 	class WSAConnection;
+	class IocpServer;
+
 	typedef std::shared_ptr<WSAConnection> WSAConnectionPtr;
-	typedef BasicServer<WSAConnectionPtr> WSABasicServer;
+	//typedef BasicServer<WSAConnectionPtr> WSABasicServer;
 
 	class WSAConnection : public IocpStream {
 		WSAConnection(WSAConnection const&) = delete;
 	public:
-		WSAConnection(WSABasicServer* server, NativeSocket socket);
+		WSAConnection(IocpServer* server, NativeSocket socket);
 		~WSAConnection();
 		virtual void disconnect()override;
+
+		IocpServer* server()const;
 	private:
-		WSABasicServer* m_server;
+		IocpServer * m_server;
 	};
 }

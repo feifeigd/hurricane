@@ -1,11 +1,12 @@
 #include <iocp/WSAConnection.h>
-
+#include <iocp/IocpServer.h>
+using meshy::IocpServer;
 using meshy::NativeSocket;
 using meshy::NativeSocketAddress;
 using meshy::WSAConnection;
-using meshy::WSABasicServer;
+//using meshy::WSABasicServer;
 
-WSAConnection::WSAConnection(WSABasicServer* server, NativeSocket socket) : IocpStream(socket), m_server(server)
+WSAConnection::WSAConnection(IocpServer* server, NativeSocket socket) : IocpStream(socket), m_server(server)
 {
 	assert(m_server);
 }
@@ -24,4 +25,9 @@ void meshy::WSAConnection::disconnect()
 	{
 		m_server->remove(GetNativeSocket());
 	}
+}
+
+meshy::IocpServer* meshy::WSAConnection::server() const
+{
+	return m_server;
 }

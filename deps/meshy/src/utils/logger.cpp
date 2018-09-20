@@ -36,7 +36,8 @@ Logger& Logger::get() {
 
 Logger::~Logger() {
 	m_shutdown = true;
-	m_writeThread.join();
+	if(m_writeThread.joinable())
+		m_writeThread.join();
 }
 
 void Logger::SetPriority(Priority priority) {

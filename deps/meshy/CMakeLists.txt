@@ -73,6 +73,7 @@ endif()
 # file(GLOB_RECURSE SOURCE_FILES src/*.h src/*.cpp )
 set(SOURCE_FILES ${COMMON_FILES} ${PLATFORM_SRC})
 add_library(meshy ${SOURCE_FILES})
+target_link_libraries(meshy fmt::fmt)
 
 add_executable(net_framework src/sample.cpp)
 target_link_libraries(net_framework meshy)

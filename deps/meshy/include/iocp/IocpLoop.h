@@ -22,6 +22,7 @@ namespace meshy {
 		static LPFN_ACCEPTEX				lpAcceptEx;	///< 函数指针
 		static LPFN_GETACCEPTEXSOCKADDRS	lpGetAcceptExSockaddrs;
 
+		/// 收到了数据
 		void enqueue(IocpStream* stream, char const* buf, size_t nread);
 	private:
 		IocpLoop();
@@ -38,7 +39,7 @@ namespace meshy {
 		
 		void WorkThread();
 	private:
-		bool										m_shutdown;
+		bool										m_shutdown = true;
 		SYSTEM_INFO									m_systemInfo;
 
 		ConcurrentQueue<IocpServer*>				m_serverQueue;
@@ -46,6 +47,6 @@ namespace meshy {
 		mutable std::mutex							m_serverMutex;
 		std::map<NativeSocket, IocpServer*>			m_servers;
 		std::vector<std::thread>					m_thread_group;
-		HANDLE										m_completionPort;
+		HANDLE										m_completionPort = Iocp::CreateCompletionPort();
 	};
 }

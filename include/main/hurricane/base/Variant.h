@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <string>
 #include <vector>
 
 namespace hurricane {
@@ -34,7 +35,7 @@ namespace hurricane {
 		private:
 			Type	m_type;
 			union {
-				int32_t	m_intValue;
+				int32_t	m_intValue = 0;
 				bool	m_boolValue;
 				float	m_floatValue;
 			};

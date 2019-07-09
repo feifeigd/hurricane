@@ -14,9 +14,9 @@ NativeSocket Socket::CreateNativeSocket() {
 	if (INVALID_SOCKET == fd)
 	{
 #ifdef OS_WIN32
-		TRACE_ERROR("Create socket failed! errorno=%d", WSAGetLastError());
+		TRACE_ERROR("Create socket failed! errorno={0}", WSAGetLastError());
 #else
-		TRACE_ERROR("Create socket failed! errorno=%d", errno);
+		TRACE_ERROR("Create socket failed! errorno={0}", errno);
 #endif
 		exit(1);
 	}
@@ -40,7 +40,7 @@ void Socket::close() {
 	close(m_nativeSocket);
 #endif // OS_WIN32
 
-	TRACE_ERROR("断开连接socket=%u", m_nativeSocket);
+	TRACE_ERROR("断开连接socket={}", m_nativeSocket);
 }
 
 NativeSocket Socket::GetNativeSocket()const {

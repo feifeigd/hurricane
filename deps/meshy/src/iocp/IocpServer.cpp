@@ -55,7 +55,7 @@ IocpServer::ConnectionType IocpServer::accept(NativeSocket fd) {
 	connection->SetNativeSocketAddress(*remoteSockaddr);
 	auto remoteIp = remoteSockaddr->sin_addr.s_addr;
 
-	TRACE_ERROR("新建连接socket=%u", connection->GetNativeSocket());
+	TRACE_ERROR("新建连接socket={}", connection->GetNativeSocket());
 	if (ChangeIpCount(remoteIp, true) >= MAX_IP_COUNT) {
 		remove(fd);
 		PostAccept();
@@ -66,12 +66,12 @@ IocpServer::ConnectionType IocpServer::accept(NativeSocket fd) {
 	if (m_connectHandler)
 		m_connectHandler(connection.get());
 	connection->SetConnected(true);
-	TRACE_DEBUG("Accept socket socket=%d", fd);
-	Iocp::OperationData* perIoData = &Iocp::CreateOperationData(connection, m_completionPort);
+	TRACE_DEBUG("Accept socket socket={}", fd);
+	Iocp::OperationData& perIoData = Iocp::CreateOperationData(connection, m_completionPort);
 	
 	DWORD flags = 0;
 	DWORD recvBytes = 0;
-	WSARecv(fd, &perIoData->databuff, 1, &recvBytes, &flags, &perIoData->overlapped, nullptr);
+	WSARecv(fd, &perIoData.databuff, 1, &recvBytes, &flags, &perIoData.overlapped, nullptr);
 
 	PostAccept();
 	return connection;
@@ -104,12 +104,12 @@ void meshy::IocpServer::PostAccept()
 		// 文档说ERROR_IO_PENDING是成功的
 		// If WSAGetLastError returns ERROR_IO_PENDING, then the operation was successfully initiated and is still in progress.
 		if (ERROR_IO_PENDING != errorno) {
-			TRACE_ERROR("AcceptEx failed with error: %u", WSAGetLastError());
+			TRACE_ERROR("AcceptEx failed with error: {}", WSAGetLastError());
 			return;
 		}
 	}
 	assert(!find(acceptfd));
 	insert(acceptfd, connection);
 	assert(find(acceptfd));
-	TRACE_INFO("To Accept: socket=%u", connection->GetNativeSocket());
+	TRACE_INFO("To Accept: socket={}", connection->GetNativeSocket());
 }

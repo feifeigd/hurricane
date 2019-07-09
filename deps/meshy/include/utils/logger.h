@@ -1,7 +1,9 @@
 #pragma once
 
 #include <utils/concurrent_queue.h>
-
+#include <fmt/format.h>
+#include <fmt/core.h>
+#include <fmt/ostream.h>
 #include <string>
 #include <fstream>
 
@@ -24,8 +26,14 @@ namespace meshy {
 		static Logger& get();
 		void SetPriority(Priority priority);
 		Priority GetPriority()const;
+
+		template<typename... Args>
+		void __stdcall WriteLog(Priority priority, char const* fmt, Args&&... args) {
+			std::string msg = fmt::format(fmt, args...);
+			return _WriteLog(priority, msg);
+		}
+		//void WriteLog(Priority priority, char const* fmt, ...)
 		void _WriteLog(Priority priority, std::string const& log);
-		void __stdcall WriteLog(Priority priority, char const* fmt, ...);
 
 	private:
 		Logger(Priority priority);

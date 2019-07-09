@@ -70,7 +70,7 @@ bool IocpLoop::init() {
 	return true;
 }
 
-IocpLoop::IocpLoop() : m_shutdown(true), m_completionPort(Iocp::CreateCompletionPort()){
+IocpLoop::IocpLoop() {
 	WindowsSocketInitializer::initialize();
 	GetSystemInfo(&m_systemInfo);
 	bool r = init();
@@ -98,7 +98,7 @@ void IocpLoop::run() {
 	std::thread iocpThread(func);
 	iocpThread.detach();	// IO主线程
 	m_thread_group.push_back(std::move(iocpThread));
-	TRACE_DEBUG("线程数=%u", m_thread_group.size());
+	TRACE_DEBUG("线程数={}", m_thread_group.size());
 }
 
 void IocpLoop::IocpThread() {
@@ -110,7 +110,7 @@ void IocpLoop::IocpThread() {
 		m_serverQueue.pop(server);	// 阻塞
 		if (!server)continue;
 		NativeSocket listenfd = server->GetNativeSocket();
-		TRACE_DEBUG("Server:%d ready, wait for new conection ...", listenfd);
+		TRACE_DEBUG("Server:{} ready, wait for new conection ...", listenfd);
 		server->SetCompletionPort(m_completionPort);
 		CreateIoCompletionPort((HANDLE)listenfd, m_completionPort, listenfd, 0);
 		{
@@ -133,7 +133,7 @@ void IocpLoop::WorkThread() {
 		BOOL result = GetQueuedCompletionStatus(m_completionPort, &bytesReceived, &key, &lpOverlapped, INFINITE);
 		if (!result)
 		{
-			TRACE_ERROR("GetQueuedCompletionStatus errno=%d,Error: %d", errno, WSAGetLastError());
+			TRACE_ERROR("GetQueuedCompletionStatus errno={0},Error: {1}", errno, WSAGetLastError());
 			if (ERROR_NETNAME_DELETED == GetLastError() && lpOverlapped)
 			{
 				Iocp::OperationData* perIoData = (Iocp::OperationData*)CONTAINING_RECORD(lpOverlapped, Iocp::OperationData, overlapped);
@@ -185,7 +185,7 @@ void IocpLoop::WorkThread() {
 			assert(perIoData == &stream->GetOperationReadData());
 			if (stream->GetNativeSocket() != key)
 			{
-				TRACE_ERROR("%s: socket=%u, key=%u", __FUNCTION__, stream->GetNativeSocket(), key);
+				TRACE_ERROR("{0}: socket={1}, key={2}", __FUNCTION__, stream->GetNativeSocket(), key);
 				stream->disconnect();
 				continue;
 			}
@@ -211,7 +211,7 @@ void IocpLoop::WorkThread() {
 }
 
 void IocpLoop::enqueue(IocpStream* stream, char const* buf, size_t nread) {
-	TRACE_DEBUG("socket: %u receive %u Bytes by thread=%u.", stream->GetNativeSocket(), nread, std::this_thread::get_id());
+	TRACE_DEBUG("socket: {0} receive {1} Bytes by thread={2}.", stream->GetNativeSocket(), nread, std::this_thread::get_id());
 	
 	if (stream->GetDataSink())
 	{
@@ -238,7 +238,7 @@ void meshy::IocpLoop::stop()
 		}
 		catch (std::system_error const& e)
 		{
-			TRACE_ERROR("%s:%s", __FUNCTION__, e.what());
+			TRACE_ERROR("{0}:{1}", __FUNCTION__, e.what());
 			continue;
 		}
 		catch (...)

@@ -1,13 +1,23 @@
 
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.10)
+
+include(cmake/HunterGate.cmake)
+HunterGate(
+    URL "https://github.com/ruslo/hunter/archive/v0.23.190.tar.gz"
+    SHA1 "bc7da329d2493201de28f0c2a5fcd4de1415c477"
+)
+
 
 project(hurricane)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set (CMAKE_CXX_STANDARD 17)
 
 include_directories(
 	${PROJECT_SOURCE_DIR}/deps/meshy/include
 )
+
+# 第三方库
+include(cmake/third.cmake)
 
 if(UNIX)
 	add_definitions(-DOS_LINUX)

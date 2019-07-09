@@ -1,4 +1,4 @@
-
+ï»¿
 #include <iocp/IocpStream.h>
 #include <ByteArray.h>
 #include <utils/logger.h>
@@ -17,7 +17,7 @@ IocpStream::IocpStream(NativeSocket socket, NativeSocketAddress const& address) 
 }
 
 size_t IocpStream::receive(char* buffer, size_t bufferSize, size_t& readSize) {
-	return 0;	// ÔÚIOCPÀïÃæÊµÏÖÁË£¬²»ÓÃ×Ô¼ºÈ¥½ÓÊÕ
+	return 0;	// åœ¨IOCPé‡Œé¢å®ç°äº†ï¼Œä¸ç”¨è‡ªå·±å»æ¥æ”¶
 }
 
 size_t IocpStream::send(ByteArray const& byteArray) {
@@ -39,6 +39,9 @@ size_t IocpStream::send(ByteArray const& byteArray) {
 		
 		n -= nwrite;
 	}
-	TRACE_DEBUG("%s %u Bytes.", __FUNCTION__, data_size - n);
+	// __FUNCTION__ ä¸ __func__çš„åŒºåˆ«
+	// __FUNCTION__ æ˜¯å…¨å±€å‡½æ•°å meshy::IocpStream::sendï¼Œ
+	// __func__æ˜¯å½“å‰å‡½æ•°å send
+	TRACE_DEBUG("{0} {1} Bytes.", __FUNCTION__, data_size - n);
 	return data_size - n;
 }

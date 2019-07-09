@@ -7,7 +7,7 @@ using meshy::Socket;
 using meshy::DataSink;
 
 BasicStream::BasicStream(NativeSocket nativeSocket, NativeSocketAddress const& address)
-	: Socket(nativeSocket, address), m_dataSink(nullptr)
+	: Socket(nativeSocket, address)
 {
 
 }
@@ -20,7 +20,7 @@ DataSink* BasicStream::GetDataSink() {
 	return m_dataSink;
 }
 
-void meshy::BasicStream::disconnect()
+void BasicStream::disconnect()
 {
 	m_bIsConnected = false;
 }

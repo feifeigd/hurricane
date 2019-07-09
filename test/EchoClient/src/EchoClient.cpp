@@ -7,10 +7,12 @@
 
 int main()
 {
-	meshy::TcpClientPtr client = meshy::TcpClient::Connect("192.168.0.141", 9000);
+	TRACE_DEBUG("hello {0}", "world");
+	size_t time = 3;
+	meshy::TcpClientPtr client = meshy::TcpClient::Connect("192.168.31.206", 9000);
 	while (!client->IsConnected()) {
 		client->reconnect();
-		std::this_thread::sleep_for(std::chrono::seconds(3));
+		std::this_thread::sleep_for(std::chrono::seconds(++time));
 	}
 	while (true) {
 		std::string str;

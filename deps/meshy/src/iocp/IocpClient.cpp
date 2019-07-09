@@ -23,7 +23,7 @@ void IocpClient::connect(std::string const& host, uint16_t port) {
 	NativeSocket fd = Socket::CreateNativeSocket();
 	SetNativeSocket(fd);
 	if (::connect(GetNativeSocket(), (sockaddr*)&m_nativeSocketAddress, sizeof(m_nativeSocketAddress))) {
-		TRACE_ERROR("%s: error=%d", __FUNCTION__, WSAGetLastError());
+		TRACE_ERROR("{0}: error={1}", __FUNCTION__, WSAGetLastError());
 		return;
 	}
 	SetConnected(true);
@@ -35,7 +35,7 @@ void IocpClient::reconnect() {
 	NativeSocket fd = Socket::CreateNativeSocket();
 	SetNativeSocket(fd);
 	if (::connect(GetNativeSocket(), (sockaddr*)&m_nativeSocketAddress, sizeof(m_nativeSocketAddress))) {
-		TRACE_ERROR("%s: error=%d", __FUNCTION__, WSAGetLastError());
+		TRACE_ERROR("{0}: error={1}", __FUNCTION__, WSAGetLastError());
 		return;
 	}
 	SetConnected(true);

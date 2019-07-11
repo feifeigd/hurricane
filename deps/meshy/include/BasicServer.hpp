@@ -26,6 +26,7 @@ namespace meshy {
 		BasicServer(DataSink* dataSink = nullptr) : m_dataSink(dataSink) {}
 
 	protected:
+		/// 0成功，否则返回错误码
 		int32_t bind(std::string const& host, uint16_t port) {
 			NativeSocket listenfd = Socket::CreateNativeSocket();
 			int32_t option = 1;
@@ -45,9 +46,9 @@ namespace meshy {
 			if (errorCode < 0)
 			{
 #ifdef OS_WIN32
-				TRACE_ERROR("Bind failed. Error: %d", WSAGetLastError());
+				TRACE_ERROR("Bind failed. Error: {}", WSAGetLastError());
 #else
-				TRACE_ERROR("Bind failed. Error: %d", errno);
+				TRACE_ERROR("Bind failed. Error: {}", errno);
 #endif
 				assert(false);
 				return errorCode;

@@ -28,7 +28,7 @@ namespace meshy {
 		Priority GetPriority()const;
 
 		template<typename... Args>
-		void __stdcall WriteLog(Priority priority, char const* fmt, Args&&... args) {
+		void WriteLog(Priority priority, char const* fmt, Args&&... args) {
 			std::string msg = fmt::format(fmt, args...);
 			return _WriteLog(priority, msg);
 		}

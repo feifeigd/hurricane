@@ -55,7 +55,7 @@ IocpServer::ConnectionType IocpServer::accept(NativeSocket fd) {
 	connection->SetNativeSocketAddress(*remoteSockaddr);
 	auto remoteIp = remoteSockaddr->sin_addr.s_addr;
 
-	TRACE_ERROR("新建连接socket={}", connection->GetNativeSocket());
+	TRACE_INFO("新建连接socket={}", connection->GetNativeSocket());
 	if (ChangeIpCount(remoteIp, true) >= MAX_IP_COUNT) {
 		remove(fd);
 		PostAccept();
@@ -81,7 +81,7 @@ void IocpServer::SetCompletionPort(HANDLE completionPort) {
 	m_completionPort = completionPort;
 }
 
-void meshy::IocpServer::PostAccept()
+void IocpServer::PostAccept()
 {
 	NativeSocket acceptfd = Socket::CreateNativeSocket();
 	int32_t option = 1;

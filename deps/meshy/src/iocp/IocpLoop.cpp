@@ -71,8 +71,7 @@ bool IocpLoop::init() {
 }
 
 IocpLoop::IocpLoop() {
-	WindowsSocketInitializer::initialize();
-	GetSystemInfo(&m_systemInfo);
+	WindowsSocketInitializer::initialize();	// 安装网络库
 	bool r = init();
 	assert(r);
 }
@@ -85,18 +84,18 @@ IocpLoop::~IocpLoop() {
 void IocpLoop::run() {
 	
 	// 工作线程
-	size_t threadCont = m_systemInfo.dwNumberOfProcessors * 2;
+	size_t const thread_count = std::thread::hardware_concurrency();
 	//threadCont = 1;
-	for (size_t i = 0; i < threadCont; ++i) {
+	for (size_t i = 0; i < thread_count; ++i) {
 		auto workerFunc = std::bind(&IocpLoop::WorkThread, this);
 		std::thread workerThread(workerFunc);
-		workerThread.detach();
+		//workerThread.detach();
 		m_thread_group.push_back(std::move(workerThread));
 	}
 
 	auto func = std::bind(&IocpLoop::IocpThread, this);
 	std::thread iocpThread(func);
-	iocpThread.detach();	// IO主线程
+	//iocpThread.detach();	// IO主线程
 	m_thread_group.push_back(std::move(iocpThread));
 	TRACE_DEBUG("线程数={}", m_thread_group.size());
 }
@@ -108,11 +107,14 @@ void IocpLoop::IocpThread() {
 	{
 		IocpServer* server = nullptr;
 		m_serverQueue.pop(server);	// 阻塞
-		if (!server)continue;
+		if (!server) {
+			TRACE_ERROR("server in nullptr.");
+			continue;
+		}
 		NativeSocket listenfd = server->GetNativeSocket();
 		TRACE_DEBUG("Server:{} ready, wait for new conection ...", listenfd);
 		server->SetCompletionPort(m_completionPort);
-		CreateIoCompletionPort((HANDLE)listenfd, m_completionPort, listenfd, 0);
+		CreateIoCompletionPort((HANDLE)listenfd, m_completionPort, listenfd, 0);	// 工作线程会收到Accept
 		{
 			std::unique_lock<std::mutex> lock(m_serverMutex);
 			m_servers.insert({ listenfd , server });
@@ -122,31 +124,35 @@ void IocpLoop::IocpThread() {
 			server->PostAccept();
 		}
 	}
+	TRACE_DEBUG("Thread {} exit.", __FUNCTION__);
 }
 
 void IocpLoop::WorkThread() {
 	
 	while (!m_shutdown) {
 		DWORD bytesReceived = 0;
-		ULONG_PTR key = 0;
+		ULONG_PTR key = 0;	// socket
 		LPOVERLAPPED lpOverlapped = nullptr;
 		BOOL result = GetQueuedCompletionStatus(m_completionPort, &bytesReceived, &key, &lpOverlapped, INFINITE);
 		if (!result)
 		{
-			TRACE_ERROR("GetQueuedCompletionStatus errno={0},Error: {1}", errno, WSAGetLastError());
+			if (64 != WSAGetLastError())
+			{
+				TRACE_ERROR("GetQueuedCompletionStatus errno={0},Error: {1},fd={2}", errno, WSAGetLastError(), key);
+			}
 			if (ERROR_NETNAME_DELETED == GetLastError() && lpOverlapped)
 			{
-				Iocp::OperationData* perIoData = (Iocp::OperationData*)CONTAINING_RECORD(lpOverlapped, Iocp::OperationData, overlapped);
-				WSAConnection *connection = dynamic_cast<WSAConnection *>(perIoData->stream);
+				/*Iocp::OperationData* perIoData = (Iocp::OperationData*)CONTAINING_RECORD(lpOverlapped, Iocp::OperationData, overlapped);
+				WSAConnection *connection = dynamic_cast<WSAConnection*>(perIoData->stream);	// TODO: 这里stream已经销毁了，怎么解决？
 				if (connection)
 				{
 					connection->server()->PostAccept();
 				}
-				perIoData->stream->disconnect();
+				perIoData->stream->disconnect(); */
 			}
 			continue;
 		}
-		if (!lpOverlapped)
+		if (!lpOverlapped)	// PostQueuedCompletionStatus发来了 nullptr
 		{
 			return; // 关闭了
 		}
@@ -167,10 +173,10 @@ void IocpLoop::WorkThread() {
 			if (server)
 			{
 				perIoData->databuff.buf[bytesReceived] = 0;
-				char* buf = perIoData->databuff.buf;
+				//char* buf = perIoData->databuff.buf;
 				IocpServer::ConnectionType stream = server->accept(perIoData->stream->GetNativeSocket());		
-				if(stream)
-					enqueue(stream.get(), buf, bytesReceived);
+				/*if(stream)
+					enqueue(stream.get(), buf, bytesReceived);*/
 				continue;
 			}
 			else {
@@ -222,8 +228,9 @@ void IocpLoop::enqueue(IocpStream* stream, char const* buf, size_t nread) {
 void meshy::IocpLoop::stop()
 {
 	m_shutdown = true;
-	for (size_t i = 0; i < m_systemInfo.dwNumberOfProcessors * 2; ++i) {
-		PostQueuedCompletionStatus(m_completionPort, 0, 0, nullptr);
+	size_t const thread_count = std::thread::hardware_concurrency();
+	for (size_t i = 0; i < thread_count; ++i) {
+		PostQueuedCompletionStatus(m_completionPort, 0, 0, nullptr);	// 停止工作线程
 	}
 	for (auto& th : m_thread_group) {
 		try

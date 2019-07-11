@@ -34,13 +34,13 @@ Socket::~Socket() {
 }
 
 void Socket::close() {
+	TRACE_ERROR("关闭连接socket={}", m_nativeSocket);
 #ifdef OS_WIN32
 	closesocket(m_nativeSocket);
 #else
 	close(m_nativeSocket);
 #endif // OS_WIN32
-
-	TRACE_ERROR("断开连接socket={}", m_nativeSocket);
+	m_nativeSocket = -1;
 }
 
 NativeSocket Socket::GetNativeSocket()const {

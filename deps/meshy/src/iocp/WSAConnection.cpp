@@ -18,7 +18,7 @@ WSAConnection::~WSAConnection() {
 	}
 }
 
-void meshy::WSAConnection::disconnect()
+void WSAConnection::disconnect()
 {
 	__super::disconnect();
 	if (m_server)
@@ -27,7 +27,7 @@ void meshy::WSAConnection::disconnect()
 	}
 }
 
-meshy::IocpServer* meshy::WSAConnection::server() const
+IocpServer* WSAConnection::server() const
 {
 	return m_server;
 }

@@ -1,9 +1,10 @@
-#pragma once
+﻿#pragma once
 
 #include <cstdint>
 #include <string>
 
 namespace meshy {
+	/// 对远程服务器发起连接
 	class IConnectable
 	{
 	public:

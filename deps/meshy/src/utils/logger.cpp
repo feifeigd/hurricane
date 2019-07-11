@@ -89,7 +89,6 @@ void Logger::WriteThread() {
 	{
 		std::queue<std::string> logs;
 		m_queue.pop_all(logs);
-		std::string log;
 
 		while (!m_shutdown && logs.size())
 		{

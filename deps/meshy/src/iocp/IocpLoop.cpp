@@ -156,10 +156,10 @@ void IocpLoop::WorkThread() {
 		{
 			return; // 关闭了
 		}
-		Iocp::OperationData* perIoData = (Iocp::OperationData*)CONTAINING_RECORD(lpOverlapped, Iocp::OperationData, overlapped);
+		Iocp::OperationData& perIoData = *(Iocp::OperationData*)CONTAINING_RECORD(lpOverlapped, Iocp::OperationData, overlapped);
 
 		//TRACE_DEBUG("perIoData=%p,stream=%p,socket=%u, key=%u", perIoData, perIoData->stream, perIoData->stream->GetNativeSocket(), key);
-		switch (perIoData->operationType)
+		switch (perIoData.operationType)
 		{
 		case Iocp::OperationType::Accept:
 		{
@@ -172,11 +172,10 @@ void IocpLoop::WorkThread() {
 			}
 			if (server)
 			{
-				perIoData->databuff.buf[bytesReceived] = 0;
+				perIoData.databuff.buf[bytesReceived] = 0;
 				//char* buf = perIoData->databuff.buf;
-				IocpServer::ConnectionType stream = server->accept(perIoData->stream->GetNativeSocket());		
-				/*if(stream)
-					enqueue(stream.get(), buf, bytesReceived);*/
+				IocpServer::ConnectionType stream = server->accept(perIoData.stream->GetNativeSocket());	// 返回个智能指针
+				
 				continue;
 			}
 			else {
@@ -186,9 +185,9 @@ void IocpLoop::WorkThread() {
 		break;
 		case Iocp::OperationType::Read:
 		{
-			IocpStream* stream = perIoData->stream;
+			IocpStream* stream = perIoData.stream;
 			assert(stream && stream->GetNativeSocket() == key);
-			assert(perIoData == &stream->GetOperationReadData());
+			assert(&perIoData == &stream->GetOperationReadData());
 			if (stream->GetNativeSocket() != key)
 			{
 				TRACE_ERROR("{0}: socket={1}, key={2}", __FUNCTION__, stream->GetNativeSocket(), key);
@@ -200,10 +199,10 @@ void IocpLoop::WorkThread() {
 				stream->disconnect();
 				continue;
 			}
-			perIoData->databuff.buf[bytesReceived] = 0;
-			enqueue(stream, perIoData->databuff.buf, bytesReceived);
-			Iocp::ResetOperationData(*perIoData);
-			perIoData->operationType = Iocp::OperationType::Read;
+			perIoData.databuff.buf[bytesReceived] = 0;
+			enqueue(stream, perIoData.databuff.buf, bytesReceived);
+			Iocp::ResetOperationData(perIoData);
+			perIoData.operationType = Iocp::OperationType::Read;
 			DWORD recvBytes = 0;
 			DWORD flags = 0;
 			Iocp::OperationData& operationReadData = stream->GetOperationReadData();

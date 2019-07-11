@@ -40,7 +40,6 @@ namespace meshy {
 		void WorkThread();
 	private:
 		bool										m_shutdown = true;
-		SYSTEM_INFO									m_systemInfo;
 
 		ConcurrentQueue<IocpServer*>				m_serverQueue;
 

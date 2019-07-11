@@ -20,7 +20,6 @@ protected:
 
 int main(){
 	meshy::EventQueue mainEventQueue(5);
-	IoLoop::get().start();
 
 	meshy::PackageDataSink dataSink(&mainEventQueue);
 

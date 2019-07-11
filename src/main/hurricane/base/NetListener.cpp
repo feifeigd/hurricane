@@ -1,7 +1,6 @@
 #include <hurricane/base/NetListener.h>
 
 void NetListener::listen() {
-	IoLoop::get().start();
 
 	m_server.listen(m_host.host(), m_host.port());
 

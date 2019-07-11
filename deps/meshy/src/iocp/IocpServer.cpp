@@ -90,7 +90,7 @@ void IocpServer::PostAccept()
 	DWORD addressLength = sizeof(NativeSocketAddress) + 16;
 	//AcceptEx
 	DWORD dwBytes = 0;
-	IocpServer::ConnectionType connection = std::make_shared<WSAConnection>(this, acceptfd);
+	IocpServer::ConnectionType connection = std::make_shared<WSAConnection>(this, acceptfd);	// 创建一个tcp连接
 	Iocp::OperationData& operationReadData = connection->GetOperationReadData();
 	
 	operationReadData.operationType = Iocp::OperationType::Accept;

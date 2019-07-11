@@ -125,7 +125,7 @@ namespace meshy {
 		std::map<NativeSocket, ConnectionType>	m_connections;		
 		std::map<uint32_t, int16_t>				m_ipCount;	// 连接的ip计数
 	private:
-		/// 每个服务器共享一个, 这里只是关联，不拥有内存所有权
+		/// 每个服务器共享一个, 这里只是关联，不拥有内存所有权,可以是解包器
 		DataSink*	m_dataSink;
 	};	
 }

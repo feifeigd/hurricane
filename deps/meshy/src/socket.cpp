@@ -10,7 +10,7 @@ using meshy::NativeSocketAddress;
 #endif // OS_WIN32
 
 NativeSocket Socket::CreateNativeSocket() {
-	NativeSocket fd = socket(AF_INET, SOCK_STREAM, 0);
+	NativeSocket fd = socket(PF_INET, SOCK_STREAM, 0);
 	if (INVALID_SOCKET == fd)
 	{
 #ifdef OS_WIN32
@@ -53,4 +53,49 @@ void Socket::SetNativeSocket(NativeSocket nativeSocket) {
 
 NativeSocketAddress const& Socket::GetNativeSocketAddress()const {
 	return m_nativeSocketAddress;
+}
+
+int Socket::type()const {	
+	return getsockopt(SOL_SOCKET, SO_TYPE);
+}
+
+int Socket::getsockopt(int level, int optname)const {
+	int optval = 0, optlen = 0;
+	int state = ::getsockopt(m_nativeSocket, level, optname, (char*)&optval, &optlen);
+	if (state)
+	{
+		// 发生了错误
+		return -1;
+	}
+	return optval;
+}
+int Socket::setsockopt(int level, int optname, int optval) {
+	int optlen = sizeof(optval);
+	int state = ::setsockopt(m_nativeSocket, level, optname, (char const*)&optval, optlen);
+	assert(SOCKET_ERROR != state);
+	return state;
+}
+
+int Socket::sendbuf()const {
+	return getsockopt(SOL_SOCKET, SO_SNDBUF);
+}
+int Socket::recvbuf()const {
+	return getsockopt(SOL_SOCKET, SO_RCVBUF);
+}
+
+
+int Socket::sendbuf(int new_size) {
+	return setsockopt(SOL_SOCKET, SO_SNDBUF, new_size);
+}
+int Socket::recvbuf(int new_size) {
+	return setsockopt(SOL_SOCKET, SO_RCVBUF, new_size);
+}
+
+int Socket::nodelay(bool value) {
+	int new_value = value;
+	return setsockopt(IPPROTO_TCP, TCP_NODELAY, new_value);
+}
+
+int Socket::ReuseAddr() {
+	return setsockopt(SOL_SOCKET, SO_REUSEADDR, 1);
 }

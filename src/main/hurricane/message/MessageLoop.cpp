@@ -24,14 +24,16 @@ void MessageLoop::run() {
 	MSG msg;
 	while (GetMessage(&msg, 0, 0, 0)) {
 		std::cout << "Recived Message" << std::endl;
+		Message* pMsg = (Message*)msg.wParam;
 		auto handler = m_messageHandlers.find(msg.message);
 		if (handler != m_messageHandlers.end())
 		{
-			handler->second((Message*)msg.wParam);
+			handler->second(pMsg);
 		}
 		DispatchMessage(&msg);
 		if (Message::Type::Stop == msg.message)
 		{
+			delete pMsg;
 			break;
 		}
 	}

@@ -16,7 +16,7 @@ namespace meshy {
 
 	public:
 		ThreadPool(size_t threads, std::function<void(Type& record)> handler)
-			: m_shutdown(false), m_threads(threads), m_handler(handler)
+			: m_threads(threads), m_handler(handler)
 		{
 			if (m_threads < MIN_THREADS)
 			{
@@ -48,7 +48,7 @@ namespace meshy {
 		}
 
 	private:
-		bool								m_shutdown;
+		bool								m_shutdown = false;
 		size_t								m_threads;
 		std::function<void(Type& record)>	m_handler;
 		std::vector<std::thread>			m_workers;

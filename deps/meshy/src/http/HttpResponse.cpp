@@ -1,6 +1,7 @@
 #include <http/HttpResponse.h>
 #include <utils/String.h>
 
+using namespace std;
 using meshy::HttpResponse;
 
 HttpResponse::HttpResponse()
@@ -30,5 +31,5 @@ void HttpResponse::SetStatusMessage(std::string const& message) {
 }
 
 std::string HttpResponse::GetResponseLine()const {
-	return m_version + ' ' + itos(m_statusCode) + ' ' + m_status_Message;
+	return m_version + ' ' + to_string(m_statusCode) + ' ' + m_status_Message;
 }

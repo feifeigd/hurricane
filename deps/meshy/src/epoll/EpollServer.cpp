@@ -10,10 +10,13 @@ EpollServer::EpollServer(DataSink* dataSink) : BasicServer<EpollConnectionPtr>(d
 }
 
 int32_t EpollServer::listen(std::string const& host, uint16_t port, int backlog){
-	bind(host, port);
+	int32_t errorCode = 0;
+	if (errorCode = bind(host, port)) {
+		return errorCode;
+	}
 
 	NativeSocket listenfd = GetNativeSocket();
-	int32_t errorCode = ::listen(listenfd, backlog);
+	errorCode = ::listen(listenfd, backlog);
 	if (-1 == errorCode){
 		TRACE_ERROR("Listen socket failed!");
 		assert(false);

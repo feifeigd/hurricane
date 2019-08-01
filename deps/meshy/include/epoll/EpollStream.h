@@ -16,7 +16,7 @@ namespace meshy{
 		void events(uint32_t evts);
 		uint32_t events()const;
 	protected:
-		uint32_t	m_events;
+		uint32_t	m_events = 0;
 	};
 
 	typedef std::shared_ptr<EpollStream>	EpollStreamPtr;

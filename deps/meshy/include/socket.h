@@ -26,6 +26,17 @@ namespace meshy {
 			m_nativeSocketAddress = address;
 		}
 
+		/// @return socket的类型是SOCK_STREAM还是SOCK_DGRAM
+		int type()const;
+		int sendbuf()const;
+		int recvbuf()const;
+
+		int sendbuf(int new_size);
+		int recvbuf(int new_size);
+		/// 关闭nagle算法，传输大文件时关闭，默认是开启状态
+		/// @param value true关闭nagle算法，false开启nagle算法
+		int nodelay(bool value);
+		int ReuseAddr();
 		static NativeSocket CreateNativeSocket();
 	protected:
 		void close();
@@ -34,6 +45,11 @@ namespace meshy {
 		NativeSocketAddress	m_nativeSocketAddress;
 	private:
 		NativeSocket		m_nativeSocket;
+
+		/// 如果optval不是int类型，需要修改这代码和返回值
+		/// @param level: SOL_SOCKET, IPPROTO_IP, IPPROTO_TCP
+		int getsockopt(int level, int optname)const;
+		int setsockopt(int level, int optname, int optval);
 
 	};
 }

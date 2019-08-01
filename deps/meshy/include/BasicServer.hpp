@@ -29,14 +29,14 @@ namespace meshy {
 		/// 0成功，否则返回错误码
 		int32_t bind(std::string const& host, uint16_t port) {
 			NativeSocket listenfd = Socket::CreateNativeSocket();
-			int32_t option = 1;
-			setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, (char*)&option, sizeof(option));
+			SetNativeSocket(listenfd);
+			ReuseAddr();
 			NativeSocketAddress srvAddr = {0};
 #ifdef OS_WIN32
 			inet_pton(AF_INET, host.c_str(), &srvAddr.sin_addr);
 #elif defined(OS_LINUX)
 			SetNonBlocking(listenfd);	// windows 监听的socket 不要设置为非阻塞
-			inet_aton(host.c_str(), &srvAddr.sin_addr);
+			inet_aton(host.c_str(), &srvAddr.sin_addr);	// windows不存在这个函数
 #endif // OS_WIN32
 
 			//srvAddr.sin_addr.s_addr = inet_addr(host.c_str());
@@ -53,7 +53,6 @@ namespace meshy {
 				assert(false);
 				return errorCode;
 			}
-			SetNativeSocket(listenfd);
 			SetNativeSocketAddress(srvAddr);
 			return 0;
 		}

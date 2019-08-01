@@ -15,6 +15,6 @@ public:
 	size_t SendAndReceive(char const* buffer, size_t size, char* resultBuffer, size_t resultSize);
 
 private:
-	hurricane::base::NetAddress			m_host;
-	std::shared_ptr<meshy::TcpClient>	m_client;
+	hurricane::base::NetAddress	m_host;
+	meshy::TcpClientPtr			m_client;
 };

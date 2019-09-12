@@ -37,3 +37,4 @@
 #endif//_WINSOCK2API_
 
 #include <MSWSock.h>
+#include <WS2tcpip.h>	// inet_pton

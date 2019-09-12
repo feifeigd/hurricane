@@ -8,9 +8,9 @@ using meshy::ByteArray;
 using meshy::Iocp;
 using meshy::IocpStream;
 using meshy::NativeSocket;
-using meshy::NativeSocketAddress;
+using meshy::SocketAddress;
 
-IocpStream::IocpStream(NativeSocket socket, NativeSocketAddress const& address) : BasicStream(socket, address)
+IocpStream::IocpStream(NativeSocket socket, SocketAddress const& address) : BasicStream(socket, address)
 {
 	Iocp::ResetOperationData(m_operatinReadData);
 	m_operatinReadData.stream = this;

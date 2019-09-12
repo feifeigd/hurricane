@@ -31,18 +31,13 @@ namespace meshy {
 			NativeSocket listenfd = Socket::CreateNativeSocket();
 			SetNativeSocket(listenfd);
 			ReuseAddr();
-			NativeSocketAddress srvAddr = {0};
+			SocketAddress srvAddr = {host, port};
 #ifdef OS_WIN32
-			inet_pton(AF_INET, host.c_str(), &srvAddr.sin_addr);
 #elif defined(OS_LINUX)
 			SetNonBlocking(listenfd);	// windows 监听的socket 不要设置为非阻塞
-			inet_aton(host.c_str(), &srvAddr.sin_addr);	// windows不存在这个函数
 #endif // OS_WIN32
 
-			//srvAddr.sin_addr.s_addr = inet_addr(host.c_str());
-			srvAddr.sin_family = AF_INET;
-			srvAddr.sin_port = htons(port);
-			int32_t errorCode = ::bind(listenfd, (sockaddr*)&srvAddr, sizeof(sockaddr));
+			int32_t errorCode = ::bind(listenfd, srvAddr, sizeof(sockaddr));
 			if (errorCode < 0)
 			{
 #ifdef OS_WIN32
@@ -53,7 +48,7 @@ namespace meshy {
 				assert(false);
 				return errorCode;
 			}
-			SetNativeSocketAddress(srvAddr);
+			SetSocketAddress(srvAddr);
 			return 0;
 		}
 

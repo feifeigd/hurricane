@@ -2,7 +2,6 @@
 #include <iocp/IocpServer.h>
 using meshy::IocpServer;
 using meshy::NativeSocket;
-using meshy::NativeSocketAddress;
 using meshy::WSAConnection;
 //using meshy::WSABasicServer;
 
@@ -14,7 +13,7 @@ WSAConnection::WSAConnection(IocpServer* server, NativeSocket socket) : IocpStre
 WSAConnection::~WSAConnection() {
 	if (m_server)
 	{
-		m_server->ChangeIpCount(m_nativeSocketAddress.sin_addr.s_addr, false);
+		m_server->ChangeIpCount(m_socketAddress.nativeSocketAddress.sin_addr.s_addr, false);
 	}
 }
 

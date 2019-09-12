@@ -52,7 +52,7 @@ IocpServer::ConnectionType IocpServer::accept(NativeSocket fd) {
 	DWORD dataLen = sizeof(opData.buffer) - 2 * addressLength;
 	IocpLoop::lpGetAcceptExSockaddrs(opData.buffer, dataLen, addressLength, addressLength, (sockaddr**)&localSockaddr, &locallen, (sockaddr**)&remoteSockaddr, &remotelen);
 		
-	connection->SetNativeSocketAddress(*remoteSockaddr);
+	connection->SetSocketAddress(*remoteSockaddr);
 	auto remoteIp = remoteSockaddr->sin_addr.s_addr;
 
 	TRACE_INFO("新建连接socket={}", connection->GetNativeSocket());
@@ -84,17 +84,17 @@ void IocpServer::SetCompletionPort(HANDLE completionPort) {
 void IocpServer::PostAccept()
 {
 	NativeSocket acceptfd = Socket::CreateNativeSocket();
-	int32_t option = 1;
-	setsockopt(acceptfd, SOL_SOCKET, SO_REUSEADDR, (char*)&option, sizeof(option));
-
-	DWORD addressLength = sizeof(NativeSocketAddress) + 16;
-	//AcceptEx
-	DWORD dwBytes = 0;
 	IocpServer::ConnectionType connection = std::make_shared<WSAConnection>(this, acceptfd);	// 创建一个tcp连接
+	int32_t option = 1;
+	connection->setsockopt(SOL_SOCKET, SO_REUSEADDR, option);
 	Iocp::OperationData& operationReadData = connection->GetOperationReadData();
 	
 	operationReadData.operationType = Iocp::OperationType::Accept;
 	NativeSocket listenfd = GetNativeSocket();
+
+	DWORD addressLength = sizeof(NativeSocketAddress) + 16;
+	//AcceptEx
+	DWORD dwBytes = 0;
 	DWORD dataLen = sizeof(operationReadData.buffer) - 2 * addressLength;
 	BOOL r = IocpLoop::lpAcceptEx(listenfd, acceptfd, operationReadData.buffer, dataLen, addressLength, addressLength, &dwBytes, &operationReadData.overlapped);
 	if (!r)

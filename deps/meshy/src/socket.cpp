@@ -3,7 +3,7 @@
 
 using meshy::Socket;
 using meshy::NativeSocket;
-using meshy::NativeSocketAddress;
+using meshy::SocketAddress;
 
 #ifdef OS_WIN32
 #pragma comment(lib, "Ws2_32.lib")	// closesocket
@@ -23,8 +23,8 @@ NativeSocket Socket::CreateNativeSocket() {
 	return fd;
 }
 
-Socket::Socket(NativeSocket nativeSocket, NativeSocketAddress const& address)
-	: m_nativeSocket(nativeSocket), m_nativeSocketAddress(address)
+Socket::Socket(NativeSocket nativeSocket, SocketAddress const& address)
+	: m_nativeSocket(nativeSocket), m_socketAddress(address)
 {
 	
 }
@@ -51,8 +51,8 @@ void Socket::SetNativeSocket(NativeSocket nativeSocket) {
 	m_nativeSocket = nativeSocket;
 }
 
-NativeSocketAddress const& Socket::GetNativeSocketAddress()const {
-	return m_nativeSocketAddress;
+SocketAddress const& Socket::GetSocketAddress()const {
+	return m_socketAddress;
 }
 
 int Socket::type()const {	

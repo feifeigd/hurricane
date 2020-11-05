@@ -39,6 +39,7 @@ set(COMMON_FILES
 	src/loop.cpp
 	src/PackageDataSink.cpp
 	src/socket.cpp
+	src/SocketAddress.cpp
 	src/utils/common_utils.cpp
 	src/utils/exendian.cpp
 	src/utils/logger.cpp

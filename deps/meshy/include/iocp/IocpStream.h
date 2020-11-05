@@ -9,7 +9,7 @@ namespace meshy {
 	class IocpStream : public BasicStream{
 		IocpStream(IocpStream const&) = delete;
 	public:
-		IocpStream(NativeSocket socket, NativeSocketAddress const& address = { 0 });
+		IocpStream(NativeSocket socket, SocketAddress const& address = { });
 
 		virtual size_t receive(char* buffer, size_t bufferSize, size_t& readSize)override;
 		virtual size_t send(ByteArray const& byteArray)override;

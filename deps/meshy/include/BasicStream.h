@@ -10,7 +10,7 @@ namespace meshy {
 	class BasicStream : public IStream, public Socket {
 		BasicStream(BasicStream const&) = delete;
 	public:
-		BasicStream(NativeSocket nativeSocket = -1, NativeSocketAddress const& address = { 0 });
+		BasicStream(NativeSocket nativeSocket = -1, SocketAddress const& address = {});
 
 		void SetDataSink(DataSink* dataSink);
 		DataSink* GetDataSink();

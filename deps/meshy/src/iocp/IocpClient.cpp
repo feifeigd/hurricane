@@ -16,13 +16,11 @@ IocpClient::IocpClient(NativeSocket socket) : IocpStream(socket) {
 }
 
 void IocpClient::connect(std::string const& host, uint16_t port) {
-	m_nativeSocketAddress = {0};
-	m_nativeSocketAddress.sin_family = AF_INET;
-	inet_pton(AF_INET, host.c_str(), &m_nativeSocketAddress.sin_addr);
-	m_nativeSocketAddress.sin_port = htons(port);
+	m_socketAddress = { host, port };
+
 	NativeSocket fd = Socket::CreateNativeSocket();
 	SetNativeSocket(fd);
-	if (::connect(GetNativeSocket(), (sockaddr*)&m_nativeSocketAddress, sizeof(m_nativeSocketAddress))) {
+	if (::connect(GetNativeSocket(), (sockaddr*)m_socketAddress, m_socketAddress.size())) {
 		TRACE_ERROR("{0}: error={1}", __FUNCTION__, WSAGetLastError());
 		return;
 	}
@@ -34,7 +32,7 @@ void IocpClient::reconnect() {
 	close();
 	NativeSocket fd = Socket::CreateNativeSocket();
 	SetNativeSocket(fd);
-	if (::connect(GetNativeSocket(), (sockaddr*)&m_nativeSocketAddress, sizeof(m_nativeSocketAddress))) {
+	if (::connect(GetNativeSocket(), (sockaddr*)m_socketAddress, m_socketAddress.size())) {
 		TRACE_ERROR("{0}: error={1}", __FUNCTION__, WSAGetLastError());
 		return;
 	}

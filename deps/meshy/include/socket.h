@@ -1,29 +1,18 @@
 ﻿#pragma once
 
-#ifdef OS_WIN32
-#include "win32/net_win32.h"
-#elif defined(OS_BSD)
-#include "bsd/net_bsd.h"
-#elif defined(OS_LINUX)
-#include "linux/net_linux.h"
-#endif // OS_WIN32
-
-#if defined(OS_BSD) || defined(OS_LINUX)
-#include <unistd.h>
-#include <netinet/in.h>
-#endif
+#include "SocketAddress.h"
 
 namespace meshy {
 	/// 原始socket的封装
 	class Socket {
 	public:
-		Socket(NativeSocket nativeSocket = 0, NativeSocketAddress const& address = {0});
+		Socket(NativeSocket nativeSocket = 0, SocketAddress const& address = {});
 		virtual ~Socket();
 
 		NativeSocket GetNativeSocket()const;
-		NativeSocketAddress const& GetNativeSocketAddress()const;
-		void SetNativeSocketAddress(NativeSocketAddress const& address) {
-			m_nativeSocketAddress = address;
+		SocketAddress const& GetSocketAddress()const;
+		void SetSocketAddress(SocketAddress const& address) {
+			m_socketAddress = address;
 		}
 
 		/// @return socket的类型是SOCK_STREAM还是SOCK_DGRAM
@@ -38,18 +27,17 @@ namespace meshy {
 		int nodelay(bool value);
 		int ReuseAddr();
 		static NativeSocket CreateNativeSocket();
-	protected:
-		void close();
-		void SetNativeSocket(NativeSocket nativeSocket);
-		/// 对于监听socket，表示绑定的地址，其他则表示对方的地址
-		NativeSocketAddress	m_nativeSocketAddress;
-	private:
-		NativeSocket		m_nativeSocket;
 
 		/// 如果optval不是int类型，需要修改这代码和返回值
 		/// @param level: SOL_SOCKET, IPPROTO_IP, IPPROTO_TCP
 		int getsockopt(int level, int optname)const;
 		int setsockopt(int level, int optname, int optval);
-
+	protected:
+		void close();
+		void SetNativeSocket(NativeSocket nativeSocket);
+		/// 对于监听socket，表示绑定的地址，其他则表示对方的地址
+		SocketAddress	m_socketAddress;
+	private:
+		NativeSocket		m_nativeSocket;
 	};
 }

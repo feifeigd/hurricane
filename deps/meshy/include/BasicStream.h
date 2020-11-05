@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "IStream.h"
 #include "socket.h"
@@ -21,7 +21,7 @@ namespace meshy {
 		bool IsConnected()const{return m_bIsConnected;};
 	private:
 		bool					m_bIsConnected = false;
-		DataIndicationHandler	m_dataHandler;
+		DataIndicationHandler	m_dataHandler;	// TODO: 哪里调用？
 		DataSink*				m_dataSink = nullptr;
 	};
 }

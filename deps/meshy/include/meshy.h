@@ -1,4 +1,4 @@
-
+﻿
 
 #pragma once
 
@@ -17,7 +17,8 @@
 
 #include "EventQueue.h"
 
-namespace meshy{
+// TCP的基础设施都在这，可以通过组合或者基础来扩展
+namespace meshy{	
 #ifdef OS_LINUX
 	typedef EpollServer					TcpServer;
 	typedef EpollConnection				TcpConnection;
@@ -31,4 +32,3 @@ namespace meshy{
 #endif	
 	typedef std::shared_ptr<TcpClient>	TcpClientPtr;
 }
-

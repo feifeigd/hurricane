@@ -39,6 +39,7 @@ Logger& Logger::get() {
 
 Logger::~Logger() {
 	m_shutdown = true;
+	m_queue.push("\n");	// 使日志线程退出
 	if(m_writeThread.joinable())
 		m_writeThread.join();
 }
@@ -66,18 +67,7 @@ void Logger::InitializeFileStream() {
 	}
 }
 
-/*void Logger::WriteLog(Priority priority, char const* fmt, ...)
-{
-	char log[4*1024];
-	va_list args;
-	va_start(args, fmt);
-	_vsnprintf(log, sizeof log, fmt, args);
-	va_end(args);
-	return _WriteLog(priority, log);
-}*/
-
-void Logger::_WriteLog(Priority priority, std::string const& log) {
-	if (priority < m_priority)return;
+void Logger::_WriteLog(Priority priority, std::string const& log) {	
 	std::stringstream ss;
 	ss << HurricaneUtils::GetCurrentTimeStamp();
 	ss << "[" << PRIORITY_STRING[size_t(priority)] << "]" << log;
@@ -90,7 +80,7 @@ void Logger::WriteThread() {
 		std::queue<std::string> logs;
 		m_queue.pop_all(logs);
 
-		while (!m_shutdown && logs.size())
+		while ( logs.size())
 		{
 			std::cout << logs.front() << std::endl;
 			m_fileStream << logs.front() << std::endl;

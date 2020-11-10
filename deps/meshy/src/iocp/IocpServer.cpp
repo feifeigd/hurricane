@@ -85,8 +85,8 @@ void IocpServer::PostAccept()
 {
 	NativeSocket acceptfd = Socket::CreateNativeSocket();
 	IocpServer::ConnectionType connection = std::make_shared<WSAConnection>(this, acceptfd);	// 创建一个tcp连接
-	int32_t option = 1;
-	connection->setsockopt(SOL_SOCKET, SO_REUSEADDR, option);
+	
+	connection->ReuseAddr();
 	Iocp::OperationData& operationReadData = connection->GetOperationReadData();
 	
 	operationReadData.operationType = Iocp::OperationType::Accept;

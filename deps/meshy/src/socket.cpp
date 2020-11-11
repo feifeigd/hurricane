@@ -36,11 +36,12 @@ Socket::~Socket() {
 void Socket::close() {
 	TRACE_ERROR("关闭连接socket={}", m_nativeSocket);
 #ifdef OS_WIN32
-	closesocket(m_nativeSocket);
+	shutdown(m_nativeSocket, SD_BOTH);
+	// closesocket(m_nativeSocket);	// 会报995 IocpLoop.cpp(148):GetQueuedCompletionStatus errno=0,Error: 995,fd=176
 #else
 	close(m_nativeSocket);
 #endif // OS_WIN32
-	m_nativeSocket = -1;
+	m_nativeSocket = INVALID_SOCKET;	// 不知道哪里把它当作指针使用了
 }
 
 NativeSocket Socket::GetNativeSocket()const {

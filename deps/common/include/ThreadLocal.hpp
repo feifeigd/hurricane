@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <noncopyable.h>
 
@@ -20,7 +20,7 @@ public:
 	}
 
 	T& get() const {
-		// Ã¿¸öÏß³ÌÒ»¸öÊµÀı	£¬Ïß³ÌÍË³ö»á×Ô¶¯µ÷ÓÃÎö¹¹º¯Êı
+		// æ¯ä¸ªçº¿ç¨‹ä¸€ä¸ªå®ä¾‹	ï¼Œçº¿ç¨‹é€€å‡ºä¼šè‡ªåŠ¨è°ƒç”¨ææ„å‡½æ•°
 		thread_local static T s_instance;
 		return s_instance;
 	}

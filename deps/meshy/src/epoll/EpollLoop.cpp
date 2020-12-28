@@ -50,7 +50,7 @@ EpollLoop::EpollLoop() : m_shutdown(false){
 	sigset_t set;
 	sigemptyset(&set);
 	sigaddset(&set, SIGPIPE);
-	sigprocmask(SIG_BLOCK, &set, nullptr);
+	sigprocmask(SIG_BLOCK, &set, nullptr);	// 忽略pipe事件
 	initialize();
 }
 
@@ -61,7 +61,7 @@ void EpollLoop::run() {
 }
 
 void EpollLoop::initialize(){
-	m_eventfd = epoll_create(MAX_EVENT_COUNT);
+	m_eventfd = epoll_create(MAX_EVENT_COUNT);	// os忽略该参数
 	if(-1 == m_eventfd){
 		TRACE_ERROR("FATAL epoll_create failed!");
 		assert(0);
@@ -89,10 +89,10 @@ void EpollLoop::HandleEvent(NativeSocketEvent* events, int32_t nfds){
 			accept(fd);
 			continue;
 		}
-		if(event.events & EPOLLIN){
+		if(event.events & EPOLLIN){	// 文件描述符可以读
 			read(fd, event.events);
 		}
-		if(event.events & EPOLLOUT){
+		if(event.events & EPOLLOUT){	// 文件描述符可以写
 
 		}
 	}

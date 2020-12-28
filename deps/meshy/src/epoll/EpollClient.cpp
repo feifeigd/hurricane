@@ -1,4 +1,4 @@
-
+﻿
 #include <epoll/EpollClient.h>
 #include <epoll/EpollLoop.h>
 #include <linux/net_linux.h>
@@ -30,7 +30,7 @@ EpollClientPtr EpollClient::Connect(std::string const& host, uint16_t port, Data
 	EpollClientPtr client = EpollClientPtr(new EpollClient(fd));
 	client->SetDataSink(dataSink);
 	client->connect(host, port);
-	client->m_events = EPOLLIN | EPOLLET;
+	client->m_events = EPOLLIN | EPOLLET;	// 边缘触发模式
 	if(-1 == EpollLoop::get().AddEpollEvents(client->m_events, fd)){
 		TRACE_ERROR("epoll_ctl:add");
 		exit(EXIT_FAILURE);

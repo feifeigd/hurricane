@@ -1,4 +1,4 @@
-#include <ThreadLocal.hpp>
+ï»¿#include <ThreadLocal.hpp>
 #include <cstdio>
 #include <thread>
 #include <vector>
@@ -23,7 +23,7 @@ void ThreadProc()
 	static ThreadLocal<A> g_start_time;
 	//static thread_local A a;
 	printf("Thread ID:%-5d, ptr:%p,%p\n", std::this_thread::get_id(), &g_start_time.get(), &g_start_time.get());
-	//Ä£ÄâÏß³ÌµÄ¹¤×÷¹ı³Ì 
+	//æ¨¡æ‹Ÿçº¿ç¨‹çš„å·¥ä½œè¿‡ç¨‹ 
 	int i = 1000 * 1000 * 100;
 	while (i--)
 	{
@@ -34,7 +34,7 @@ int main(){
 	printf("Main Thread ID:%-5d\n", std::this_thread::get_id());
 	std::vector<std::thread> threads;
 
-	// ¿ªÆôÊ®¸öÏß³Ì£¬¼ÆËãÃ¿¸öÏß³ÌÔËĞĞµÄÊ±¼ä.
+	// å¼€å¯åä¸ªçº¿ç¨‹ï¼Œè®¡ç®—æ¯ä¸ªçº¿ç¨‹è¿è¡Œçš„æ—¶é—´.
 	for (int i = 0; i < 2; i++)
 	{
 		threads.push_back(std::thread(ThreadProc));

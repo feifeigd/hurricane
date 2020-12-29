@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "concurrent_queue.h"
+#include "concurrent_queue.hpp"
 #include <thread>
 #include <functional>
 
@@ -37,16 +37,19 @@ namespace meshy {
 
 		~ThreadPool() {
 			m_shutdown = true;
-			for (std::thread& worker : m_workers)
-			{
-				worker.join();
-			}
+			join_all();
 		}
 
 		void submit(Type const& record) {
 			m_tasks.push(record);
 		}
 
+		void join_all(){
+			for (std::thread& worker : m_workers)
+			{
+				worker.join();
+			}
+		}
 	private:
 		bool								m_shutdown = false;
 		size_t								m_threads;
